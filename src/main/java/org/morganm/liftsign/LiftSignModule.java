@@ -39,22 +39,10 @@ public class LiftSignModule extends AbstractModule {
 			.implement(SignDetail.class, SignDetail.class)
 			.build(SignFactory.class)
 		);
-		
-//		com.google.inject.
-//		FactoryModelBuilder b;
-//		install(new Factor)
 	}
 	
 	@Provides
 	Plugin providePlugin() {
 		return plugin;
 	}
-
-//	@Provides
-//	SignCache provideSignCache() {
-//		if( signCache == null )
-//			injector.
-//			signCache = new SignCache();
-//		return signCache;
-//	}
 }

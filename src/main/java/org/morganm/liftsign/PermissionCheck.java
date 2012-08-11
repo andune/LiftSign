@@ -3,6 +3,8 @@
  */
 package org.morganm.liftsign;
 
+import javax.inject.Inject;
+
 import org.bukkit.command.CommandSender;
 import org.morganm.liftsign.util.PermissionSystem;
 
@@ -18,6 +20,7 @@ public class PermissionCheck {
 	
 	private PermissionSystem permissionSystem;
 	
+	@Inject
 	public PermissionCheck(PermissionSystem permissionSystem) {
 		this.permissionSystem = permissionSystem;
 	}

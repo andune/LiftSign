@@ -23,6 +23,7 @@ import ru.tehkode.permissions.bukkit.PermissionsEx;
 
 import com.nijiko.permissions.PermissionHandler;
 import com.nijikokun.bukkit.Permissions.Permissions;
+import com.sk89q.wepif.PermissionsResolver;
 import com.sk89q.wepif.PermissionsResolverManager;
 
 /** Permission abstraction class, use Vault, WEPIF, Perm2 or superperms, depending on what's available.
@@ -59,17 +60,12 @@ public class PermissionSystem {
 	 */
     private static final String GROUP_PREFIX = "group.";
 
-    /** Singleton instance.
-     * 
-     */
-	private static PermissionSystem instance;
-	
 	private final Plugin plugin;
 	private final Logger log;
 	private Type systemInUse;
 	
     private net.milkbowl.vault.permission.Permission vaultPermission = null;
-    private PermissionsResolverManager wepifPerms = null;
+    private PermissionsResolver wepifPerms = null;
     private PermissionHandler perm2Handler;
     private PermissionsEx pex;
     
@@ -77,17 +73,6 @@ public class PermissionSystem {
 	public PermissionSystem(Plugin plugin, Logger log) {
 		this.plugin = plugin;
 		this.log = log;
-		instance = this;
-	}
-	
-	/** **WARNING** Not your typical singleton pattern, this CAN BE NULL. An instance
-	 * must be created by the plugin before this will return a value. This simply
-	 * points to the most recent object that was instantiated.
-	 * 
-	 * @return
-	 */
-	public static PermissionSystem getInstance() {
-		return instance;
 	}
 	
 	public Type getSystemInUse() { return systemInUse; }

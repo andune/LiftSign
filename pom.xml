@@ -184,16 +184,41 @@
             <configuration>
               <artifactSet>
                 <includes>
-<!--
-                  <include>org.slf4j:slf4j-api</include>
-                  <include>org.slf4j:slf4j-jdk14</include>
--->
                   <include>com.google.inject:guice</include>
                   <include>com.google.inject.extensions:guice-assistedinject</include>
                   <include>javax.inject:javax.inject</include>
                   <include>aopalliance:aopalliance</include>
+                  <include>com.sk89q:worldedit</include>
+                  <include>net.milkbowl.vault:Vault</include>
+                  <include>com.nijiko:permissions</include>
+<!--
+                  <include>org.slf4j:slf4j-api</include>
+                  <include>org.slf4j:slf4j-jdk14</include>
+-->
                 </includes>
               </artifactSet>
+              <filters>
+                <filter>
+                  <artifact>com.sk89q:worldedit</artifact>
+                  <includes>
+                    <include>com/sk89q/wepif/PermissionsResolver.class</include>
+                    <include>com/sk89q/wepif/PermissionsProvider.class</include>
+                  </includes>
+                </filter>
+                <filter>
+                  <artifact>net.milkbowl.vault:Vault</artifact>
+                  <includes>
+                    <include>net/milkbowl/vault/permission/Permission.class</include>
+                  </includes>
+                </filter>
+                <filter>
+                  <artifact>com.nijiko:permissions</artifact>
+                  <includes>
+                    <include>com/nijiko/permissions/PermissionHandler.class</include>
+                  </includes>
+                </filter>
+              </filters>
+
 
               <relocations>
                 <relocation>

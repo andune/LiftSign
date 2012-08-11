@@ -7,6 +7,8 @@ import java.util.logging.Logger;
 
 import javax.inject.Inject;
 
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.google.inject.Guice;
@@ -18,11 +20,9 @@ import com.google.inject.Injector;
  */
 public class LiftSign extends JavaPlugin {
 	private Logger log;
-//	private SignCache cache;
-//	private PermissionSystem permSystem;
-//	private PermissionCheck permCheck;
 	private PlayerListener playerListener;
 	private BlockListener blockListener;
+	private PermissionCheck permCheck;
 	private Injector injector = Guice.createInjector();
 	
 	private int buildNumber = -1;
@@ -35,22 +35,23 @@ public class LiftSign extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(playerListener, this);
 		getServer().getPluginManager().registerEvents(blockListener, this);
 		
-//		injector.get
-		
-//		permSystem = new PermissionSystem(this, log);
-//		permSystem.setupPermissions(true);
-//		permCheck = new PermissionCheck(permSystem);
-		
-//		cache = new SignCache();
-//		getServer().getPluginManager().registerEvents(new PlayerListener(cache, permCheck), this);
-//		getServer().getPluginManager().registerEvents(new BlockListener(cache, permCheck), this);
-		
 		log.info("version "+getDescription().getVersion()+", build "+buildNumber+" is enabled");
 	}
 	
 	@Override
 	public void onDisable() {
 		log.info("version "+getDescription().getVersion()+", build "+buildNumber+" is disabled");
+	}
+	
+	@Override
+	public boolean onCommand(CommandSender sender, Command command,
+			String label, String[] args) {
+		if( label.equals("liftsign") ) {
+			sender.sendMessage("test canCreateNormalLift: "+permCheck.canCreateNormalLift(sender));
+			return true;
+		}
+
+		return false;
 	}
 	
 	@Inject
@@ -66,5 +67,10 @@ public class LiftSign extends JavaPlugin {
 	@Inject
 	public void setBlockListener(BlockListener blockListener) {
 		this.blockListener = blockListener;
+	}
+	
+	@Inject
+	public void setPermissionCheck(PermissionCheck permCheck) {
+		this.permCheck = permCheck;
 	}
 }

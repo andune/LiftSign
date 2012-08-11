@@ -17,3 +17,6 @@ permissions:
     liftsign.normal.create:
         description: Allows creation of liftsigns
         default: op
+commands:
+  liftsign:
+    description: LiftSign test command
