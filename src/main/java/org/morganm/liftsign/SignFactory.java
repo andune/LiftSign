@@ -10,5 +10,5 @@ import org.bukkit.block.Sign;
  *
  */
 public interface SignFactory {
-	public SignDetail create(Sign sign);
+	public SignDetail create(Sign sign, String[] lines);
 }

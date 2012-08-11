@@ -57,7 +57,7 @@ public class PlayerListener implements Listener {
 			SignDetail signDetail = cache.getCachedSignDetail(sign);
 			if( signDetail == null ) {
 				log.debug("Instantiating SignDetail object");
-				signDetail = factory.create(sign);
+				signDetail = factory.create(sign, null);
 			}
 			
 			SignDetail targetLift = null;
@@ -70,13 +70,17 @@ public class PlayerListener implements Listener {
 				// TODO: print message
 				return;
 			}
-
 			log.debug("has permission");
+			
+			Sign targetSign = null;
+			World world = null;
 			if( targetLift != null ) {
-				World world = targetLift.getWorld();
+				world = targetLift.getWorld();
 				Block signBlock = world.getBlockAt(targetLift.getLocation());
-				Sign targetSign = (Sign) signBlock;
-				
+				targetSign = util.getSignState(signBlock);
+			}
+			
+			if( targetLift != null && targetSign != null ) {
 				// check to make sure targetblock is safe
 				Location playerLocation = event.getPlayer().getLocation();
 				Location finalLocation = null;

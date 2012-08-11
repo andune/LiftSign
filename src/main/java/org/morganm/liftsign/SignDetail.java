@@ -3,10 +3,10 @@
  */
 package org.morganm.liftsign;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -26,6 +26,7 @@ public class SignDetail {
 	private final SignCache cache;
 	private final General general;
 	private final Logger log;
+	private final Util util;
 	
 	final private Location location;
 	final private String locationString;
@@ -40,10 +41,24 @@ public class SignDetail {
 	private boolean isLiftUp;	// true = up, false = down
 	private SignDetail targetLift;
 	
+	/** Create a new SignDetail object.
+	 * 
+	 * @param cache
+	 * @param general
+	 * @param log
+	 * @param util
+	 * @param sign the Sign backing this SignDetail object
+	 * @param lines intended to be used when called from SignChangeEvent, so
+	 * the new lines can be passed in even though they aren't part of the block
+	 * state yet. Leave null if you want this method to just use the lines from
+	 * the Sign state object.
+	 */
 	@Inject
-	public SignDetail(SignCache cache, General general, Logger log, @Assisted Sign sign) {
+	public SignDetail(SignCache cache, General general, Logger log, Util util,
+			@Assisted Sign sign, @Assisted @Nullable String[] lines) {
 		this.cache = cache;
 		this.log = log;
+		this.util = util;
 		this.general = general;
 		
 		this.location = sign.getLocation();
@@ -53,10 +68,14 @@ public class SignDetail {
 		this.y = this.location.getBlockY();
 		this.z = this.location.getBlockZ();
 		
+		// fill lines from Sign if it is null
+		if( lines == null )
+			lines = sign.getLines();
+		
 		isLiftSign = false;
-		String[] lines = sign.getLines();
 		log.debug("new SignDetail object. lines=",lines);
 		if( lines != null && lines.length > 1 ) {
+			log.debug("lines[1]=",lines[1]);
 			if( lines[1].equals("[Lift up]") ) {
 				log.debug("Sign is lift up");
 				isLiftUp = true;
@@ -138,15 +157,16 @@ public class SignDetail {
 				face = BlockFace.DOWN;
 				max = 1;
 			}
+			log.debug("getTargetLift(): isLiftUp=",isLiftUp,", face=",face,", max=",max);
 			
+			Block next = b;
 			// loop up or down looking for the first possible target sign.
 			// if/when we find it, store that as our target and break loop
 			for(int i=y; i != max;) {
-				final Block next = b.getRelative(face);
-				final int typeId = next.getTypeId();
-				if( typeId == Material.SIGN.getId() ||
-						typeId == Material.WALL_SIGN.getId() ) {
-					Sign sign = (Sign) b;
+				next = next.getRelative(face);
+				
+				Sign sign = util.getSignState(next);
+				if( sign != null ) {
 					SignDetail detail = cache.getCachedSignDetail(sign);
 					
 					// if no cached object exists for this sign, then create one

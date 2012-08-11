@@ -54,7 +54,7 @@ public class SignCache {
 		}
 		
 //		signDetail = new SignDetail(this, sign);
-		signDetail = factory.create(sign);
+		signDetail = factory.create(sign, null);
 		signs.put(signDetail.getLocationString(), signDetail);
 		return signDetail;
 	}
