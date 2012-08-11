@@ -12,6 +12,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.morganm.mBukkitLib.General;
+import org.morganm.mBukkitLib.Logger;
 
 import com.google.inject.assistedinject.Assisted;
 
@@ -22,8 +23,9 @@ import com.google.inject.assistedinject.Assisted;
  *
  */
 public class SignDetail {
-	final private SignCache cache;
-	final private General general;
+	private final SignCache cache;
+	private final General general;
+	private final Logger log;
 	
 	final private Location location;
 	final private String locationString;
@@ -39,8 +41,9 @@ public class SignDetail {
 	private SignDetail targetLift;
 	
 	@Inject
-	public SignDetail(SignCache cache, General general, @Assisted Sign sign) {
+	public SignDetail(SignCache cache, General general, Logger log, @Assisted Sign sign) {
 		this.cache = cache;
+		this.log = log;
 		this.general = general;
 		
 		this.location = sign.getLocation();
@@ -52,12 +55,20 @@ public class SignDetail {
 		
 		isLiftSign = false;
 		String[] lines = sign.getLines();
+		log.debug("new SignDetail object. lines=",lines);
 		if( lines != null && lines.length > 1 ) {
-			if( lines[1].equals("[Lift Up]") ) {
+			if( lines[1].equals("[Lift up]") ) {
+				log.debug("Sign is lift up");
 				isLiftUp = true;
+				isLiftSign = true;
 			}
-			else if( lines[1].equals("[Lift Down]") ) {
+			else if( lines[1].equals("[Lift down]") ) {
+				log.debug("Sign is lift up");
 				isLiftUp = false;
+				isLiftSign = true;
+			}
+			else {
+				log.debug("Sign is not a lift sign");
 			}
 			// TODO: add "null lift" (target-only)
 		}
@@ -80,8 +91,10 @@ public class SignDetail {
 	public boolean isPossibleTargetMatch(SignDetail sign) {
 		// if this current sign is not a lift sign, then it's impossible
 		// for it to target the given sign.
-		if( !isLiftSign )
+		if( !isLiftSign ) {
+			log.debug("isPossibleTargetMatch(): sign is not a lift sign");
 			return false;
+		}
 		
 		// we can only target other lift signs.
 		if( !sign.isLiftSign() )
@@ -111,10 +124,13 @@ public class SignDetail {
 	 * @return
 	 */
 	public SignDetail getTargetLift() {
-		if( isLiftSign )
+		if( !isLiftSign ) {
+			log.debug("getTargetLift(): sign is not a lift sign");
 			return null;
+		}
 
 		if( targetLift == null ) {
+			log.debug("getTargetLift(): targetLift is null, looking for new target");
 			Block b = getLocation().getBlock();
 			BlockFace face = BlockFace.UP;
 			int max = 254;

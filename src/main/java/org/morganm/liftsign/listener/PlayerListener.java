@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.morganm.liftsign;
+package org.morganm.liftsign.listener;
 
 import javax.inject.Inject;
 
@@ -9,10 +9,17 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.morganm.liftsign.PermissionCheck;
+import org.morganm.liftsign.SignCache;
+import org.morganm.liftsign.SignDetail;
+import org.morganm.liftsign.SignFactory;
+import org.morganm.liftsign.Util;
+import org.morganm.mBukkitLib.Logger;
 import org.morganm.mBukkitLib.Teleport;
 
 /**
@@ -23,12 +30,18 @@ public class PlayerListener implements Listener {
 	private final SignCache cache;
 	private final PermissionCheck perm;
 	private final Teleport teleport;
+	private final Logger log;
+	private final Util util;
+	private final SignFactory factory;
 
 	@Inject
-	public PlayerListener(SignCache cache, PermissionCheck perm, Teleport teleport) {
+	public PlayerListener(SignCache cache, SignFactory factory, PermissionCheck perm, Teleport teleport, Logger log, Util util) {
 		this.cache = cache;
+		this.factory = factory;
 		this.perm = perm;
 		this.teleport = teleport;
+		this.log = log;
+		this.util = util;
 	}
 	
 	@EventHandler(ignoreCancelled=true)
@@ -36,20 +49,29 @@ public class PlayerListener implements Listener {
 		if( event.getAction() != Action.RIGHT_CLICK_BLOCK )
 			return;
 
-		Block b = event.getClickedBlock();
-		if( b instanceof Sign ) {
-			Sign sign = (Sign) b;
+		Sign sign = util.getSignState(event.getClickedBlock());
+		if( sign != null ) {
+			final Player p = event.getPlayer();
+			
+			log.debug("Sign right clicked");
 			SignDetail signDetail = cache.getCachedSignDetail(sign);
+			if( signDetail == null ) {
+				log.debug("Instantiating SignDetail object");
+				signDetail = factory.create(sign);
+			}
+			
 			SignDetail targetLift = null;
 			if( signDetail != null )
 				targetLift = signDetail.getTargetLift();
 			
 			// abort if player doesn't have permission
-			if( !perm.canUseNormalLift(event.getPlayer()) ) {
+			if( !perm.canUseNormalLift(p) ) {
+				p.sendMessage("No permission.");
 				// TODO: print message
 				return;
 			}
 
+			log.debug("has permission");
 			if( targetLift != null ) {
 				World world = targetLift.getWorld();
 				Block signBlock = world.getBlockAt(targetLift.getLocation());
@@ -75,6 +97,7 @@ public class PlayerListener implements Listener {
 				}
 			}
 			else
+				log.debug("no target");
 				;	// TODO: print some "no lift target" message
 		}
 	}
