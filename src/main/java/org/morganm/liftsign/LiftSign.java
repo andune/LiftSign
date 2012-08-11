@@ -3,13 +3,12 @@
  */
 package org.morganm.liftsign;
 
-import java.util.logging.Logger;
-
 import javax.inject.Inject;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.morganm.liftsign.util.Logger;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;

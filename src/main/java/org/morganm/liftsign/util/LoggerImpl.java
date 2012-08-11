@@ -8,7 +8,6 @@ import java.util.logging.Level;
 import javax.inject.Inject;
 
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.PluginLogger;
 
 /**
  * @author morganm
@@ -17,23 +16,23 @@ import org.bukkit.plugin.PluginLogger;
 public class LoggerImpl implements Logger {
 	// class version: 2
 
-	private final Plugin plugin;
-	private final java.util.logging.Logger log;
+//	private final Plugin plugin;
+	private final java.util.logging.Logger log = java.util.logging.Logger.getLogger(LoggerImpl.class.toString());
 	private final Debug debug;
 	private String logPrefix;
 	
 	@Inject
 	public LoggerImpl(Plugin plugin) {
-		this.plugin = plugin;
-		this.log = this.plugin.getLogger();
+//		this.plugin = plugin;
+//		this.log = this.plugin.getLogger();
 
 		// PluginLogger handles prefix automatically. Otherwise set a prefix
-		if( !(plugin.getLogger() instanceof PluginLogger) ) {
+//		if( !(plugin.getLogger() instanceof PluginLogger) ) {
 			String prefix = plugin.getDescription().getPrefix();
 			if( prefix == null )
 				prefix = "["+plugin.getDescription().getName()+"] ";
 			setLogPrefix(prefix);
-		}
+//		}
 
 		this.debug = Debug.getInstance();
 	}
