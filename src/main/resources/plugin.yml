@@ -1,0 +1,19 @@
+name: ${project.name}
+main: ${groupId}.${project.name}
+url: ${project.url}
+version: ${project.version}
+author: morganm
+database: false
+softdepend: [Vault, WorldEdit, Permissions, PermissionsEx]
+permissions:
+    liftsign.*:
+        description: Gives access to all LiftSign permissions
+        children:
+            liftsign.normal.use: true
+            liftsign.normal.create: true
+    liftsign.normal.use:
+        description: Allows usage of normal liftsigns
+        default: op
+    liftsign.normal.create:
+        description: Allows creation of liftsigns
+        default: op
