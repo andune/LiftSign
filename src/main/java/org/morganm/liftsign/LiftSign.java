@@ -8,7 +8,7 @@ import javax.inject.Inject;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.morganm.liftsign.util.Logger;
+import org.morganm.mBukkitLib.Logger;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;

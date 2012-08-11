@@ -6,7 +6,7 @@ package org.morganm.liftsign;
 import javax.inject.Inject;
 
 import org.bukkit.command.CommandSender;
-import org.morganm.liftsign.util.PermissionSystem;
+import org.morganm.mBukkitLib.PermissionSystem;
 
 /** Centralized permission checks.
  * 

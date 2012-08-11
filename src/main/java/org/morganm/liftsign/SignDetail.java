@@ -11,7 +11,7 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
-import org.morganm.liftsign.util.General;
+import org.morganm.mBukkitLib.General;
 
 import com.google.inject.assistedinject.Assisted;
 
@@ -23,6 +23,8 @@ import com.google.inject.assistedinject.Assisted;
  */
 public class SignDetail {
 	final private SignCache cache;
+	final private General general;
+	
 	final private Location location;
 	final private String locationString;
 	
@@ -37,10 +39,12 @@ public class SignDetail {
 	private SignDetail targetLift;
 	
 	@Inject
-	public SignDetail(SignCache cache, @Assisted Sign sign) {
+	public SignDetail(SignCache cache, General general, @Assisted Sign sign) {
 		this.cache = cache;
+		this.general = general;
+		
 		this.location = sign.getLocation();
-		this.locationString = General.getInstance().shortLocationString(this.location);
+		this.locationString = this.general.shortLocationString(this.location);
 		this.world = this.location.getWorld();
 		this.x = this.location.getBlockX();
 		this.y = this.location.getBlockY();

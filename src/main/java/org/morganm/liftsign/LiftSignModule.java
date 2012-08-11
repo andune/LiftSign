@@ -6,8 +6,9 @@ package org.morganm.liftsign;
 import javax.inject.Inject;
 
 import org.bukkit.plugin.Plugin;
-import org.morganm.liftsign.util.Logger;
-import org.morganm.liftsign.util.LoggerImpl;
+import org.morganm.mBukkitLib.Logger;
+import org.morganm.mBukkitLib.LoggerImpl;
+import org.morganm.mBukkitLib.Teleport;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
@@ -33,6 +34,8 @@ public class LiftSignModule extends AbstractModule {
 			.to(LoggerImpl.class)
 			.in(Scopes.SINGLETON);
 		bind(SignCache.class)
+			.in(Scopes.SINGLETON);
+		bind(Teleport.class)
 			.in(Scopes.SINGLETON);
 		
 		install(new FactoryModuleBuilder()

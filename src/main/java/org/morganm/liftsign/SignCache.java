@@ -9,7 +9,7 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import org.bukkit.block.Sign;
-import org.morganm.liftsign.util.General;
+import org.morganm.mBukkitLib.General;
 
 /** Class for keeping track of known signs and their lift status. This avoids
  * additional processing as signs are clicked by only processing sign details
@@ -23,11 +23,17 @@ import org.morganm.liftsign.util.General;
  */
 public class SignCache {
 	private final Map<String, SignDetail> signs = new HashMap<String, SignDetail>();
+	private final SignFactory factory;
+	private final General general;
+	
 	@Inject
-	private SignFactory factory;
+	public SignCache(SignFactory factory, General general) {
+		this.factory = factory;
+		this.general = general;
+	}
 	
 	public SignDetail getCachedSignDetail(Sign sign) {
-		final String locationString = General.getInstance().shortLocationString(sign.getLocation());
+		final String locationString = general.shortLocationString(sign.getLocation());
 		SignDetail signDetail = signs.get(locationString);
 		return signDetail;
 	}

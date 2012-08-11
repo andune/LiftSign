@@ -13,7 +13,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.morganm.liftsign.util.Teleport;
+import org.morganm.mBukkitLib.Teleport;
 
 /**
  * @author morganm
@@ -22,12 +22,13 @@ import org.morganm.liftsign.util.Teleport;
 public class PlayerListener implements Listener {
 	private final SignCache cache;
 	private final PermissionCheck perm;
-	private final Teleport teleport = Teleport.getInstance();
+	private final Teleport teleport;
 
 	@Inject
-	public PlayerListener(SignCache cache, PermissionCheck perm) {
+	public PlayerListener(SignCache cache, PermissionCheck perm, Teleport teleport) {
 		this.cache = cache;
 		this.perm = perm;
+		this.teleport = teleport;
 	}
 	
 	@EventHandler(ignoreCancelled=true)
