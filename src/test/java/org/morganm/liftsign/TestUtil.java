@@ -33,32 +33,54 @@
  */
 package org.morganm.liftsign;
 
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.Sign;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.mockito.Mockito.when;
 
-/** Common utility methods for LiftSign classes.
- * 
+import org.bukkit.block.Block;
+import org.bukkit.block.Sign;
+import org.junit.Before;
+import org.junit.Test;
+import org.powermock.api.mockito.PowerMockito;
+
+/**
  * @author morganm
  *
  */
-public class Util {
-	/** If a given block is a sign, this will return the Sign state object.
-	 * If it's not a sign, null will be returned.
-	 * 
-	 * @param b
-	 * @return
-	 */
-	public Sign getSignState(final Block b) {
-		Sign sign = null;
+public class TestUtil {
+	private Block notASign;
+	private Block normalSign;
+	private Block wallSign;
+	private Sign dummySign;
+	
+	@Before
+	public void setup() {
+		dummySign = PowerMockito.mock(Sign.class);
 		
-		final int typeId = b.getTypeId();
-		if( typeId == Material.SIGN_POST.getId() || typeId == Material.WALL_SIGN.getId() ) {
-			BlockState bs = b.getState();
-			sign = (Sign) bs;
-		}
+		notASign = PowerMockito.mock(Block.class);
+		when(notASign.getTypeId()).thenReturn(1);
+		when(notASign.getState()).thenReturn(dummySign);
 		
-		return sign;
+		normalSign = PowerMockito.mock(Block.class);
+		when(normalSign.getTypeId()).thenReturn(63);
+		when(normalSign.getState()).thenReturn(dummySign);
+		
+		wallSign = PowerMockito.mock(Block.class);
+		when(wallSign.getTypeId()).thenReturn(68);
+		when(wallSign.getState()).thenReturn(dummySign);
+	}
+	
+	@Test
+	public void testGetSignState() {
+		Util util = new Util();
+		
+		Sign sign = util.getSignState(notASign);
+		assertNull(sign);
+		
+		sign = util.getSignState(normalSign);
+		assertNotNull(sign);
+		
+		sign = util.getSignState(wallSign);
+		assertNotNull(sign);
 	}
 }

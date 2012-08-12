@@ -64,6 +64,8 @@ public class LiftSign extends JavaPlugin {
 	
 	@Override
 	public void onEnable() {
+		// build object graph using Guice dependency injection. This injects
+		// all dependencies for us using our @Inject setters
 		injector = Guice.createInjector(new LiftSignModule(this));
 		injector.injectMembers(this);
 		

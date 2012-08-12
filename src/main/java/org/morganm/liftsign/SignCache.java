@@ -38,8 +38,8 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import org.bukkit.Location;
 import org.bukkit.block.Sign;
-import org.morganm.mBukkitLib.General;
 
 /** Class for keeping track of known signs and their lift status. This avoids
  * additional processing as signs are clicked by only processing sign details
@@ -54,16 +54,14 @@ import org.morganm.mBukkitLib.General;
 public class SignCache {
 	private final Map<String, SignDetail> signs = new HashMap<String, SignDetail>();
 	private final SignFactory factory;
-	private final General general;
 	
 	@Inject
-	public SignCache(SignFactory factory, General general) {
+	public SignCache(SignFactory factory) {
 		this.factory = factory;
-		this.general = general;
 	}
 	
-	public SignDetail getCachedSignDetail(Sign sign) {
-		final String locationString = general.shortLocationString(sign.getLocation());
+	public SignDetail getCachedSignDetail(Location location) {
+		final String locationString = getLocationKey(location);
 		SignDetail signDetail = signs.get(locationString);
 		return signDetail;
 	}
@@ -75,17 +73,17 @@ public class SignCache {
 	 * @return
 	 */
 	public SignDetail newSignCreated(Sign sign) {
-		SignDetail signDetail = getCachedSignDetail(sign);
+		SignDetail signDetail = getCachedSignDetail(sign.getLocation());
 
 		// in theory shouldn't happen, but deal with this situation if it does
 		if( signDetail != null ) {
 			invalidateCacheLocation(signDetail);
-			signs.remove(signDetail.getLocationString());
+			signs.remove(getLocationKey(signDetail.getLocation()));
 		}
 		
 //		signDetail = new SignDetail(this, sign);
 		signDetail = factory.create(sign, null);
-		signs.put(signDetail.getLocationString(), signDetail);
+		signs.put(getLocationKey(signDetail), signDetail);
 		return signDetail;
 	}
 	
@@ -96,22 +94,22 @@ public class SignCache {
 	 * @return
 	 */
 	public SignDetail newSignCreated(SignDetail signDetail) {
-		SignDetail cached = signs.get(signDetail.getLocationString());
+		SignDetail cached = signs.get(getLocationKey(signDetail));
 
 		// in theory shouldn't happen, but deal with this situation if it does
 		if( cached != null ) {
 			invalidateCacheLocation(cached);
-			signs.remove(cached.getLocationString());
+			signs.remove(getLocationKey(cached));
 		}
 		
-		signs.put(signDetail.getLocationString(), signDetail);
+		signs.put(getLocationKey(signDetail), signDetail);
 		return signDetail;
 	}
 
 	public void existingSignDestroyed(Sign sign) {
-		SignDetail signDetail = getCachedSignDetail(sign);
+		SignDetail signDetail = getCachedSignDetail(sign.getLocation());
 		if( signDetail != null ) {
-			signs.remove(signDetail.getLocationString());
+			signs.remove(getLocationKey(signDetail));
 			if( signDetail.isLiftSign() )
 				invalidateCacheLocation(signDetail);
 		}
@@ -121,5 +119,12 @@ public class SignCache {
 		for(SignDetail val : signs.values()) {
 			val.clearCache(signDetail);
 		}
+	}
+	
+	private String getLocationKey(final Location l) {
+		return l.getWorld().getName()+","+l.getBlockX()+","+l.getBlockY()+","+l.getBlockZ();
+	}
+	private String getLocationKey(final SignDetail signDetail) {
+		return getLocationKey(signDetail.getLocation());
 	}
 }

@@ -41,7 +41,6 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
-import org.morganm.mBukkitLib.General;
 import org.morganm.mBukkitLib.Logger;
 
 import com.google.inject.assistedinject.Assisted;
@@ -54,12 +53,10 @@ import com.google.inject.assistedinject.Assisted;
  */
 public class SignDetail {
 	private final SignCache cache;
-	private final General general;
 	private final Logger log;
 	private final Util util;
 	
 	final private Location location;
-	final private String locationString;
 	
 	// world, x y, and z are cached internally for efficient vertical processing
 	final private World world;
@@ -68,7 +65,8 @@ public class SignDetail {
 	final private int z;
 	
 	private boolean isLiftSign;
-	private boolean isLiftUp;	// true = up, false = down
+	private boolean isLiftUp = false;
+	private boolean isLiftDown = false;
 	private SignDetail targetLift;
 	
 	/** Create a new SignDetail object.
@@ -84,15 +82,13 @@ public class SignDetail {
 	 * the Sign state object.
 	 */
 	@Inject
-	public SignDetail(SignCache cache, General general, Logger log, Util util,
+	public SignDetail(SignCache cache, Logger log, Util util,
 			@Assisted Sign sign, @Assisted @Nullable String[] lines) {
 		this.cache = cache;
 		this.log = log;
 		this.util = util;
-		this.general = general;
 		
 		this.location = sign.getLocation();
-		this.locationString = this.general.shortLocationString(this.location);
 		this.world = this.location.getWorld();
 		this.x = this.location.getBlockX();
 		this.y = this.location.getBlockY();
@@ -106,20 +102,23 @@ public class SignDetail {
 		log.debug("new SignDetail object. lines=",lines);
 		if( lines != null && lines.length > 1 ) {
 			log.debug("lines[1]=",lines[1]);
-			if( lines[1].equals("[Lift up]") ) {
+			if( lines[1].equalsIgnoreCase("[lift up]") ) {
 				log.debug("Sign is lift up");
 				isLiftUp = true;
 				isLiftSign = true;
 			}
-			else if( lines[1].equals("[Lift down]") ) {
+			else if( lines[1].equalsIgnoreCase("[lift down]") ) {
 				log.debug("Sign is lift up");
-				isLiftUp = false;
+				isLiftDown = true;
+				isLiftSign = true;
+			}
+			else if( lines[1].equalsIgnoreCase("[lift]") ) {
+				log.debug("Sign is lift target");
 				isLiftSign = true;
 			}
 			else {
 				log.debug("Sign is not a lift sign");
 			}
-			// TODO: add "null lift" (target-only)
 		}
 	}
 	
@@ -161,7 +160,7 @@ public class SignDetail {
 		if( isLiftUp && location.getBlockY() > y ) {
 			return true;
 		}
-		else if( !isLiftUp && location.getBlockY() < y ) {
+		else if( isLiftDown && location.getBlockY() < y ) {
 			return true;
 		}
 		
@@ -175,6 +174,11 @@ public class SignDetail {
 	public SignDetail getTargetLift() {
 		if( !isLiftSign ) {
 			log.debug("getTargetLift(): sign is not a lift sign");
+			return null;
+		}
+		
+		if( !isLiftUp && !isLiftDown ) {
+			log.debug("getTargetLift(): sign is a destination lift sign; has no target");
 			return null;
 		}
 
@@ -197,7 +201,7 @@ public class SignDetail {
 				
 				Sign sign = util.getSignState(next);
 				if( sign != null ) {
-					SignDetail detail = cache.getCachedSignDetail(sign);
+					SignDetail detail = cache.getCachedSignDetail(sign.getLocation());
 					
 					// if no cached object exists for this sign, then create one
 					if( detail == null )
@@ -248,8 +252,5 @@ public class SignDetail {
 	}
 	public Location getLocation() {
 		return location;
-	}
-	public String getLocationString() {
-		return locationString;
 	}
 }

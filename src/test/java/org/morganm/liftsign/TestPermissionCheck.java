@@ -33,56 +33,55 @@
  */
 package org.morganm.liftsign;
 
-import javax.inject.Inject;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.eq;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
-import org.bukkit.plugin.Plugin;
-import org.morganm.mBukkitLib.Debug;
-import org.morganm.mBukkitLib.Logger;
-import org.morganm.mBukkitLib.LoggerImpl;
+import org.bukkit.command.CommandSender;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.morganm.liftsign.PermissionCheck;
 import org.morganm.mBukkitLib.PermissionSystem;
-import org.morganm.mBukkitLib.Teleport;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.modules.junit4.PowerMockRunner;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.Provides;
-import com.google.inject.Scopes;
-import com.google.inject.assistedinject.FactoryModuleBuilder;
-
-/** This module tells Guice how to wire together all dependencies
- * for the plugin.
- * 
+/**
  * @author morganm
  *
  */
-public class LiftSignModule extends AbstractModule {
-	private final Plugin plugin;
-
-	@Inject
-	public LiftSignModule(Plugin plugin) {
-		this.plugin = plugin;
+@RunWith(PowerMockRunner.class)
+public class TestPermissionCheck {
+	private PermissionSystem permSystemAllTrue;
+	private PermissionSystem permSystemAllFalse;
+	private CommandSender mockSender;
+	
+	@Before
+	public void setup() {
+		mockSender = PowerMockito.mock(CommandSender.class);
+		permSystemAllTrue = PowerMockito.mock(PermissionSystem.class);
+		when(permSystemAllTrue.has(eq(mockSender), anyString())).thenReturn(true);
+		permSystemAllFalse = PowerMockito.mock(PermissionSystem.class);
+		when(permSystemAllTrue.has(eq(mockSender), anyString())).thenReturn(true);
 	}
 	
-	@Override
-	protected void configure() {
-		bind(Logger.class)
-			.to(LoggerImpl.class)
-			.in(Scopes.SINGLETON);
-		bind(SignCache.class)
-			.in(Scopes.SINGLETON);
-		bind(Teleport.class)
-			.in(Scopes.SINGLETON);
-		bind(Debug.class)
-			.in(Scopes.SINGLETON);
-		bind(PermissionSystem.class)
-			.in(Scopes.SINGLETON);
+	@Test
+	public void testCanUseNormalLift() {
+		PermissionCheck pc = new PermissionCheck(permSystemAllTrue);
+		assertTrue(pc.canUseNormalLift(mockSender));
 		
-		install(new FactoryModuleBuilder()
-			.implement(SignDetail.class, SignDetail.class)
-			.build(SignFactory.class)
-		);
+		pc = new PermissionCheck(permSystemAllFalse);
+		assertFalse(pc.canUseNormalLift(mockSender));
 	}
 	
-	@Provides
-	Plugin providePlugin() {
-		return plugin;
+	@Test
+	public void testCanCreateNormalLift() {
+		PermissionCheck pc = new PermissionCheck(permSystemAllTrue);
+		assertTrue(pc.canCreateNormalLift(mockSender));
+		
+		pc = new PermissionCheck(permSystemAllFalse);
+		assertFalse(pc.canCreateNormalLift(mockSender));
 	}
 }

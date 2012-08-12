@@ -84,7 +84,7 @@ public class PlayerListener implements Listener {
 			final Player p = event.getPlayer();
 			
 			log.debug("Sign right clicked");
-			SignDetail signDetail = cache.getCachedSignDetail(sign);
+			SignDetail signDetail = cache.getCachedSignDetail(sign.getLocation());
 			if( signDetail == null ) {
 				log.debug("Instantiating SignDetail object");
 				signDetail = factory.create(sign, null);

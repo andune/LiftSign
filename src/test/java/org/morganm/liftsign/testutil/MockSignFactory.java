@@ -31,34 +31,26 @@
 /**
  * 
  */
-package org.morganm.liftsign;
+package org.morganm.liftsign.testutil;
 
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
+import static org.mockito.Mockito.when;
+
+import org.bukkit.Location;
 import org.bukkit.block.Sign;
+import org.morganm.liftsign.SignDetail;
+import org.morganm.liftsign.SignFactory;
+import org.powermock.api.mockito.PowerMockito;
 
-/** Common utility methods for LiftSign classes.
- * 
+/**
  * @author morganm
  *
  */
-public class Util {
-	/** If a given block is a sign, this will return the Sign state object.
-	 * If it's not a sign, null will be returned.
-	 * 
-	 * @param b
-	 * @return
-	 */
-	public Sign getSignState(final Block b) {
-		Sign sign = null;
-		
-		final int typeId = b.getTypeId();
-		if( typeId == Material.SIGN_POST.getId() || typeId == Material.WALL_SIGN.getId() ) {
-			BlockState bs = b.getState();
-			sign = (Sign) bs;
-		}
-		
-		return sign;
+public class MockSignFactory implements SignFactory {
+	@Override
+	public SignDetail create(Sign sign, String[] lines) {
+		SignDetail signDetail = PowerMockito.mock(SignDetail.class);
+		final Location l = sign.getLocation();
+    	when(signDetail.getLocation()).thenReturn(l);
+    	return signDetail;
 	}
 }

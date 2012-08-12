@@ -31,34 +31,49 @@
 /**
  * 
  */
-package org.morganm.liftsign;
+package org.morganm.liftsign.testutil;
 
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.Sign;
+import static org.mockito.Mockito.when;
 
-/** Common utility methods for LiftSign classes.
+import org.bukkit.Location;
+import org.bukkit.World;
+import org.powermock.api.mockito.PowerMockito;
+
+/** General utility routines common to multiple tests.
  * 
  * @author morganm
  *
  */
-public class Util {
-	/** If a given block is a sign, this will return the Sign state object.
-	 * If it's not a sign, null will be returned.
+public class TestUtility {
+	private static int nextInt=1;
+
+	public World createMockWorld() {
+		World world = PowerMockito.mock(World.class);
+		when(world.getName()).thenReturn("MockWorld"+nextInt++);
+		return world;
+	}
+	
+	public Location newLocation(final World world, final int x, final int y, final int z) {
+		Location loc = PowerMockito.mock(Location.class);
+		when(loc.getWorld()).thenReturn(world);
+		when(loc.getBlockX()).thenReturn(x);
+		when(loc.getBlockY()).thenReturn(y);
+		when(loc.getBlockZ()).thenReturn(z);
+		when(loc.getX()).thenReturn((double) x);
+		when(loc.getY()).thenReturn((double) y);
+		when(loc.getZ()).thenReturn((double) z);
+		return loc;
+	}
+	
+	/** Return a new, unique location with every invocation. We just
+	 * increment the x axis by 1 with each call.
 	 * 
-	 * @param b
+	 * @param world
 	 * @return
 	 */
-	public Sign getSignState(final Block b) {
-		Sign sign = null;
-		
-		final int typeId = b.getTypeId();
-		if( typeId == Material.SIGN_POST.getId() || typeId == Material.WALL_SIGN.getId() ) {
-			BlockState bs = b.getState();
-			sign = (Sign) bs;
-		}
-		
-		return sign;
+	public Location newUniqueLocation(World world) {
+		Location loc = newLocation(world, nextInt++, 0, 0);
+		return loc;
 	}
+
 }
