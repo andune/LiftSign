@@ -145,13 +145,16 @@ public class SignDetail {
 		}
 		
 		// we can only target other lift signs.
-		if( !sign.isLiftSign() )
+		if( !sign.isLiftSign() ) {
+			log.debug("isPossibleTargetMatch(): target sign is not a lift sign");
 			return false;
+		}
 		
 		Location location = sign.getLocation();
 		if( !location.getWorld().equals(world) ||
 				location.getBlockX() != x ||
 				location.getBlockZ() != z ) {
+			log.debug("isPossibleTargetMatch(): world, x or z axis not a match");
 			return false;
 		}
 		
@@ -186,7 +189,7 @@ public class SignDetail {
 			log.debug("getTargetLift(): targetLift is null, looking for new target");
 			Block b = getLocation().getBlock();
 			BlockFace face = BlockFace.UP;
-			int max = 254;
+			int max = world.getMaxHeight()-1;
 			if( !isLiftUp ) {
 				face = BlockFace.DOWN;
 				max = 1;

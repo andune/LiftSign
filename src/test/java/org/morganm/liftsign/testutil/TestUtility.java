@@ -46,6 +46,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.mockito.invocation.InvocationOnMock;
@@ -110,6 +111,7 @@ public class TestUtility {
 			}
 		}
 		
+		when(world.getMaxHeight()).thenReturn(yBlocks-1);
 		when(world.getBlockAt(any(Location.class)))
 		.thenAnswer(new Answer<Block>() {
 			public Block answer(InvocationOnMock invocation) throws Throwable {
@@ -140,6 +142,15 @@ public class TestUtility {
 		when(loc.getX()).thenReturn((double) x);
 		when(loc.getY()).thenReturn((double) y);
 		when(loc.getZ()).thenReturn((double) z);
+		when(loc.getBlock())
+		.thenAnswer(new Answer<Block>() {
+			public Block answer(InvocationOnMock invocation) throws Throwable {
+				Location l = (Location) invocation.getMock();
+				WorldBlocks worldBlocks = getWorldBlocksObject(l.getWorld());
+				Block b = worldBlocks.blocks[l.getBlockX()][l.getBlockY()][l.getBlockZ()];
+				return b;
+			}
+			});
 		return loc;
 	}
 	
@@ -206,6 +217,24 @@ public class TestUtility {
 				return worldBlocks.blockType[l.getBlockX()][l.getBlockY()][l.getBlockZ()].getId();
 			}
 			});
+		when(b.getRelative(any(BlockFace.class)))
+		.thenAnswer(new Answer<Block>() {
+			public Block answer(InvocationOnMock invocation) throws Throwable {
+				Block b = (Block) invocation.getMock();
+				Location l = b.getLocation();
+				int y = l.getBlockY();
+				
+				BlockFace face = (BlockFace) invocation.getArguments()[0];
+				if( BlockFace.UP.equals(face) )
+					y++;
+				else if( BlockFace.DOWN.equals(face) )
+					y--;
+//				System.out.print("getRelative: y="+y);
+				
+				WorldBlocks worldBlocks = getWorldBlocksObject(l.getWorld());
+				return worldBlocks.blocks[l.getBlockX()][y][l.getBlockZ()];
+			}
+			});
 		
 		doAnswer(new Answer() {
 			public Object answer(InvocationOnMock invocation) {
@@ -229,7 +258,7 @@ public class TestUtility {
 		return b;
 	}
 	
-	public Block newSignBlock(World world, int x, int y, int z, final String[] lines, boolean wallSign) {
+	public Sign newSign(World world, int x, int y, int z, final String[] lines, boolean wallSign) {
 		final Block block = newMockBlock(world, x, y, z);
 		
 		Material material = Material.SIGN_POST;
@@ -237,9 +266,11 @@ public class TestUtility {
 			material = Material.WALL_SIGN;
 		block.setType(material);
 		
+		final Location loc = block.getLocation();
 		final Sign sign = PowerMockito.mock(Sign.class);
 		when(sign.getBlock()).thenReturn(block);
 		when(sign.getLines()).thenReturn(lines);
+		when(sign.getLocation()).thenReturn(loc);
 		when(sign.getLine(anyInt()))
 		.thenAnswer(new Answer<String>() {
 			public String answer(InvocationOnMock invocation) throws Throwable {
@@ -250,9 +281,10 @@ public class TestUtility {
 			});
 		
 		when(block.getState()).thenReturn(sign);
-		return block;
+		
+		return sign;
 	}
-
+	
 	/** Return a Logger that spits out any calls to System.out. Useful for
 	 * debugging tests.
 	 * 

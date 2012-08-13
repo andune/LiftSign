@@ -44,6 +44,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.junit.Before;
 import org.junit.Test;
@@ -84,6 +85,25 @@ public class TestBlockListener {
 		
 		log = PowerMockito.mock(Logger.class);
 //		log = testUtility.systemOutLogger();
+	}
+	
+	@Test
+	public void testSignBreakClearsCache() {
+		final SignCache cache = PowerMockito.mock(SignCache.class);
+		final World mockWorld = testUtility.createPopulatedMockWorld(1,1,1);
+		final String[] lines = new String[] {"","[Lift up]","",""};
+		
+		// now create a sign block to test with
+		final Block signBlock = testUtility.newSign(mockWorld, 0,0,0, lines, false).getBlock();
+		final BlockBreakEvent event = PowerMockito.mock(BlockBreakEvent.class);
+		when(event.getBlock()).thenReturn(signBlock);
+		
+		BlockListener blockListener = new BlockListener(cache,
+				PowerMockito.mock(PermissionCheck.class),
+				PowerMockito.mock(SignFactory.class), log, util);
+		blockListener.onBlockBreak(event);
+		
+		verify(cache).existingSignDestroyed(any(Sign.class));
 	}
 	
 	@Test
@@ -142,7 +162,7 @@ public class TestBlockListener {
 		final String[] lines = new String[] {"","[Lift up]","",""};
 		
 		// now create a sign block to test with
-		final Block signBlock = testUtility.newSignBlock(mockWorld, 0,0,0, lines, false);
+		final Block signBlock = testUtility.newSign(mockWorld, 0,0,0, lines, false).getBlock();
 		final SignChangeEvent event = mockSignChangeEvent(signBlock, lines, player);
 		
 		final SignFactory factory = PowerMockito.mock(SignFactory.class);
