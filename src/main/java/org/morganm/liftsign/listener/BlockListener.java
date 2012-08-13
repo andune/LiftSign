@@ -72,13 +72,13 @@ public class BlockListener implements Listener {
 		Sign sign = util.getSignState(e.getBlock());
 		if( sign != null ) {
 			log.debug("Sign change detected");
-//			SignDetail signDetail = new SignDetail(cache, (Sign) b);
 			String[] lines = e.getLines();
+			
 			SignDetail signDetail = factory.create(sign, lines);
 			if( signDetail.isLiftSign() ) {
 				log.debug("Sign is lift sign");
 				if( !perm.canCreateNormalLift(e.getPlayer()) ) {
-					// TODO: print error
+					e.getPlayer().sendMessage("You cannot create lift signs");
 					e.setCancelled(true);
 				}
 			}
