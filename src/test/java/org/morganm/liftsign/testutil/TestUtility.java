@@ -33,10 +33,24 @@
  */
 package org.morganm.liftsign.testutil;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyVararg;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.when;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.block.Sign;
+import org.bukkit.entity.Player;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
+import org.morganm.mBukkitLib.Logger;
 import org.powermock.api.mockito.PowerMockito;
 
 /** General utility routines common to multiple tests.
@@ -46,10 +60,74 @@ import org.powermock.api.mockito.PowerMockito;
  */
 public class TestUtility {
 	private static int nextInt=1;
+	private Map<World, WorldBlocks> worldBlocksMap = new HashMap<World, WorldBlocks>();
 
+	/** Create a minimal mock world.
+	 * 
+	 * @return
+	 */
 	public World createMockWorld() {
 		World world = PowerMockito.mock(World.class);
 		when(world.getName()).thenReturn("MockWorld"+nextInt++);
+		return world;
+	}
+	
+	@SuppressWarnings("rawtypes")
+	public Player createDummyPlayer() {
+		final PlayerState playerState = new PlayerState();
+		playerState.name = "Player"+nextInt++;
+		playerState.location = null;
+		
+		final Player player = PowerMockito.mock(Player.class);
+		when(player.getName()).thenReturn(playerState.name);
+		when(player.getLocation()).thenReturn(playerState.location);
+		doAnswer(new Answer() {
+			public Object answer(InvocationOnMock invocation) {
+				Location location = (Location) invocation.getArguments()[0];
+				playerState.location = location;
+				return null;
+			}})
+			.when(player).teleport(any(Location.class));
+		
+		return player;
+	}
+	
+	/** Create a mock world that implements stateful .getBlockAt() and
+	 * a 8x16x8 world (x,y,z).
+	 * 
+	 * @return
+	 */
+	public World createPopulatedMockWorld(final int xBlocks, final int yBlocks, final int zBlocks) {
+		final World world = PowerMockito.mock(World.class);
+		final WorldBlocks worldBlocks = new WorldBlocks(xBlocks, yBlocks, zBlocks);
+		worldBlocksMap.put(world, worldBlocks);
+		
+		for(int x=0; x < xBlocks; x++) {
+			for(int y=0; y < yBlocks; y++) {
+				for(int z=0; z < zBlocks; z++) {
+					worldBlocks.blocks[x][y][z] = newMockBlock(world,x,y,z);
+				}
+			}
+		}
+		
+		when(world.getBlockAt(any(Location.class)))
+		.thenAnswer(new Answer<Block>() {
+			public Block answer(InvocationOnMock invocation) throws Throwable {
+				Location l = (Location) invocation.getArguments()[0];
+				Block b = worldBlocks.blocks[l.getBlockX()][l.getBlockY()][l.getBlockZ()];
+				return b;
+			}
+			});
+		when(world.getBlockAt(anyInt(), anyInt(), anyInt()))
+		.thenAnswer(new Answer<Block>() {
+			public Block answer(InvocationOnMock invocation) throws Throwable {
+				int x = (Integer) invocation.getArguments()[0];
+				int y = (Integer) invocation.getArguments()[1];
+				int z = (Integer) invocation.getArguments()[2];
+				Block b = worldBlocks.blocks[x][y][z];
+				return b;
+			}
+			});
 		return world;
 	}
 	
@@ -75,5 +153,146 @@ public class TestUtility {
 		Location loc = newLocation(world, nextInt++, 0, 0);
 		return loc;
 	}
+	
+	/** Create a new block at a given location and store it in our mock
+	 * worldBlocks map.
+	 * 
+	 * @param x
+	 * @param y
+	 * @param z
+	 */
+	@SuppressWarnings("rawtypes")
+	private Block newMockBlock(World world, int x, int y, int z) {
+		WorldBlocks worldBlocks = getWorldBlocksObject(world);
+		if( worldBlocks == null )
+			throw new NullPointerException("worldBlocks is null");
+		
+		Block b = PowerMockito.mock(Block.class);
+		
+		Material type = null;
+		if( y == 0 ) {
+			type = Material.BEDROCK;
+		}
+		else if( (y % 4) == 0 ) {		// every 4th later is all stone
+			type = Material.STONE;
+		}
+		else if( x == 0 && z == 0 ) {	// 0,y,0 is vertical stone column
+			type = Material.STONE;
+		}
+		else {							// everything else is air
+			type = Material.AIR;
+		}
+		
+		worldBlocks.blocks[x][y][z] = b;
+		worldBlocks.blockType[x][y][z] = type;
+		
+		final Location loc = newLocation(world,x,y,z);
+		when(b.getLocation()).thenReturn(loc);
+		when(b.getType())
+		.thenAnswer(new Answer<Material>() {
+			public Material answer(InvocationOnMock invocation) throws Throwable {
+				Block b = (Block) invocation.getMock();
+				Location l = b.getLocation();
+				WorldBlocks worldBlocks = getWorldBlocksObject(l.getWorld());
+				return worldBlocks.blockType[l.getBlockX()][l.getBlockY()][l.getBlockZ()];
+			}
+			});
+		when(b.getTypeId())
+		.thenAnswer(new Answer<Integer>() {
+			public Integer answer(InvocationOnMock invocation) throws Throwable {
+				Block b = (Block) invocation.getMock();
+				Location l = b.getLocation();
+				WorldBlocks worldBlocks = getWorldBlocksObject(l.getWorld());
+				return worldBlocks.blockType[l.getBlockX()][l.getBlockY()][l.getBlockZ()].getId();
+			}
+			});
+		
+		doAnswer(new Answer() {
+			public Object answer(InvocationOnMock invocation) {
+				Block b = (Block) invocation.getMock();
+				Location l = b.getLocation();
+				Material material = (Material) invocation.getArguments()[0];
+				WorldBlocks worldBlocks = getWorldBlocksObject(l.getWorld());
+				worldBlocks.blockType[l.getBlockX()][l.getBlockY()][l.getBlockZ()] = material;
+				return null;
+			}})
+			.when(b).setType(any(Material.class));
+		doAnswer(new Answer() {
+			public Object answer(InvocationOnMock invocation) {
+				Integer id = (Integer) invocation.getArguments()[0];
+				Block b = (Block) invocation.getMock();
+				b.setType(Material.getMaterial(id));
+				return null;
+			}})
+			.when(b).setTypeId(anyInt());
+		
+		return b;
+	}
+	
+	public Block newSignBlock(World world, int x, int y, int z, final String[] lines, boolean wallSign) {
+		final Block block = newMockBlock(world, x, y, z);
+		
+		Material material = Material.SIGN_POST;
+		if( wallSign )
+			material = Material.WALL_SIGN;
+		block.setType(material);
+		
+		final Sign sign = PowerMockito.mock(Sign.class);
+		when(sign.getBlock()).thenReturn(block);
+		when(sign.getLines()).thenReturn(lines);
+		when(sign.getLine(anyInt()))
+		.thenAnswer(new Answer<String>() {
+			public String answer(InvocationOnMock invocation) throws Throwable {
+				int index = (Integer) invocation.getArguments()[0];
+				Sign sign = (Sign) invocation.getMock();
+				return sign.getLines()[index];
+			}
+			});
+		
+		when(block.getState()).thenReturn(sign);
+		return block;
+	}
 
+	/** Return a Logger that spits out any calls to System.out. Useful for
+	 * debugging tests.
+	 * 
+	 * @return
+	 */
+	public Logger systemOutLogger() {
+		Logger log = PowerMockito.mock(Logger.class);
+		@SuppressWarnings("rawtypes")
+		final Answer answer = new Answer() {
+			public Object answer(InvocationOnMock invocation) {
+				StringBuffer sb = new StringBuffer();
+				for(Object o : invocation.getArguments())
+					sb.append(o.toString());
+				System.out.println(sb.toString());
+				return null;
+			}};
+			
+		doAnswer(answer).when(log).debug(anyVararg());
+		doAnswer(answer).when(log).devDebug(anyVararg());
+		doAnswer(answer).when(log).info(anyVararg());
+		
+		return log;
+	}
+
+	private WorldBlocks getWorldBlocksObject(World world) {
+		return worldBlocksMap.get(world);
+	}
+	
+	private class WorldBlocks {
+		final Block[][][] blocks;
+		final Material[][][] blockType;
+		
+		public WorldBlocks(final int xBlocks, final int yBlocks, final int zBlocks) {
+			blocks = new Block[xBlocks][yBlocks][zBlocks];
+			blockType = new Material[xBlocks][yBlocks][zBlocks];
+		}
+	}
+	
+	private class PlayerState {
+		Location location;
+		String name;
+	}
 }

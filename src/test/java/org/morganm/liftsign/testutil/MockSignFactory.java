@@ -47,7 +47,7 @@ import org.powermock.api.mockito.PowerMockito;
  */
 public class MockSignFactory implements SignFactory {
 	@Override
-	public SignDetail create(Sign sign, String[] lines) {
+	public SignDetail create(final Sign sign, final String[] lines) {
 		SignDetail signDetail = PowerMockito.mock(SignDetail.class);
 		final Location l = sign.getLocation();
     	when(signDetail.getLocation()).thenReturn(l);

@@ -33,26 +33,22 @@
  */
 package org.morganm.liftsign;
 
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.eq;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.when;
 
 import org.bukkit.command.CommandSender;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.morganm.liftsign.PermissionCheck;
 import org.morganm.mBukkitLib.PermissionSystem;
 import org.powermock.api.mockito.PowerMockito;
-import org.powermock.modules.junit4.PowerMockRunner;
 
 /**
  * @author morganm
  *
  */
-@RunWith(PowerMockRunner.class)
 public class TestPermissionCheck {
 	private PermissionSystem permSystemAllTrue;
 	private PermissionSystem permSystemAllFalse;
