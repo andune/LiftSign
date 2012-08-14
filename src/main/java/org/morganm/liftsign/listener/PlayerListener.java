@@ -94,14 +94,6 @@ public class PlayerListener implements Listener {
 			if( signDetail != null )
 				targetLift = signDetail.getTargetLift();
 			
-			// abort if player doesn't have permission
-			if( !perm.canUseNormalLift(p) ) {
-				p.sendMessage("No permission.");
-				// TODO: print message
-				return;
-			}
-			log.debug("has permission");
-			
 			Sign targetSign = null;
 			World world = null;
 			if( targetLift != null ) {
@@ -111,6 +103,13 @@ public class PlayerListener implements Listener {
 			}
 			
 			if( targetLift != null && targetSign != null ) {
+				// abort if player doesn't have permission
+				if( !perm.canUseNormalLift(p) ) {
+					p.sendMessage("No permission.");
+					return;
+				}
+				log.debug("has permission");
+				
 				// check to make sure targetblock is safe
 				Location playerLocation = event.getPlayer().getLocation();
 				Location finalLocation = null;
@@ -127,12 +126,13 @@ public class PlayerListener implements Listener {
 					event.getPlayer().teleport(finalLocation);
 				}
 				else {
-					;	// TODO: print block unsafe message
+					p.sendMessage("Destination not safe.");
 				}
 			}
-			else
+			else {
 				log.debug("no target");
-				;	// TODO: print some "no lift target" message
+				p.sendMessage("Lift sign has no valid target lift");
+			}
 		}
 	}
 }

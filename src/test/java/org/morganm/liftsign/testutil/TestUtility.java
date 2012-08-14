@@ -133,6 +133,10 @@ public class TestUtility {
 		return world;
 	}
 	
+	public void cleanupMockWorld(World w) {
+		worldBlocksMap.remove(w);
+	}
+	
 	public Location newLocation(final World world, final int x, final int y, final int z) {
 		Location loc = PowerMockito.mock(Location.class);
 		when(loc.getWorld()).thenReturn(world);
@@ -271,6 +275,7 @@ public class TestUtility {
 		when(sign.getBlock()).thenReturn(block);
 		when(sign.getLines()).thenReturn(lines);
 		when(sign.getLocation()).thenReturn(loc);
+		when(sign.getY()).thenReturn(y);
 		when(sign.getLine(anyInt()))
 		.thenAnswer(new Answer<String>() {
 			public String answer(InvocationOnMock invocation) throws Throwable {

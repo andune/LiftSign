@@ -81,9 +81,9 @@ public class SignCache {
 			signs.remove(getLocationKey(signDetail.getLocation()));
 		}
 		
-//		signDetail = new SignDetail(this, sign);
 		signDetail = factory.create(sign, null);
 		signs.put(getLocationKey(signDetail), signDetail);
+		invalidateCacheLocation(signDetail);
 		return signDetail;
 	}
 	
@@ -103,6 +103,7 @@ public class SignCache {
 		}
 		
 		signs.put(getLocationKey(signDetail), signDetail);
+		invalidateCacheLocation(signDetail);
 		return signDetail;
 	}
 

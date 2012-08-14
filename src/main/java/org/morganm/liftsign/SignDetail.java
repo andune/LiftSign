@@ -227,16 +227,16 @@ public class SignDetail {
 		return targetLift;
 	}
 	
-	/** Called for each cached SignDetail object when a new Lift Sign has
-	 * been created. It should invalidate any cached target on the same
-	 * vertical path so that the up/down locations are recalculated on
-	 * next use.
+	/** Called for each cached SignDetail object when a Lift Sign has
+	 * been created or destroyed. It should invalidate any cached target
+	 * on the same vertical path so that the up/down locations are
+	 * recalculated on next use.
 	 * 
 	 * @param signDetail
 	 */
 	public void clearCache(SignDetail signDetail) {
-		// don't do anything if we aren't a lift sign
-		if( signDetail.isLiftSign )
+		// don't do anything unless both signs are lift signs
+		if( !(isLiftSign && signDetail.isLiftSign) )
 			return;
 
 		// are we in the same vertical location as given sign? if yes, reset cache object

@@ -82,7 +82,7 @@ public class LiftSignModule extends AbstractModule {
 	}
 	
 	@Provides
-	Plugin providePlugin() {
+	protected Plugin providePlugin() {
 		return plugin;
 	}
 }

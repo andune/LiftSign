@@ -104,6 +104,7 @@ public class TestBlockListener {
 		blockListener.onBlockBreak(event);
 		
 		verify(cache).existingSignDestroyed(any(Sign.class));
+		testUtility.cleanupMockWorld(mockWorld);
 	}
 	
 	@Test
@@ -119,6 +120,7 @@ public class TestBlockListener {
 		verify(sco.player).sendMessage(anyString());
 		verify(sco.factory).create(any(Sign.class), any(String[].class));
 		verify(sco.cache, never()).newSignCreated(any(Sign.class));
+		testUtility.cleanupMockWorld(sco.mockWorld);
 	}
 	
 	@Test
@@ -133,6 +135,7 @@ public class TestBlockListener {
 		verify(sco.event, never()).setCancelled(true);
 		verify(sco.factory).create(any(Sign.class), any(String[].class));
 		verify(sco.cache).newSignCreated(any(SignDetail.class));
+		testUtility.cleanupMockWorld(sco.mockWorld);
 	}
 	
 	private class SignChangeObjects {
@@ -141,13 +144,15 @@ public class TestBlockListener {
 		final SignFactory factory;
 		final SignCache cache;
 		final Player player;
+		final World mockWorld;
 		public SignChangeObjects(BlockListener blockListener, SignChangeEvent event,
-				SignFactory factory, SignCache cache, Player player) {
+				SignFactory factory, SignCache cache, Player player, World mockWorld) {
 			this.blockListener = blockListener;
 			this.event = event;
 			this.factory = factory;
 			this.cache = cache;
 			this.player = player;
+			this.mockWorld = mockWorld;
 		}
 	}
 	/** Setup code common to signChange tests.
@@ -177,7 +182,7 @@ public class TestBlockListener {
 		
 		BlockListener blockListener = new BlockListener(cache, perm, factory, log, util);
 		
-		return new SignChangeObjects(blockListener, event, factory, cache, player);
+		return new SignChangeObjects(blockListener, event, factory, cache, player, mockWorld);
 	}
 	
 	private SignChangeEvent mockSignChangeEvent(final Block block, final String[] lines, final Player player) {
