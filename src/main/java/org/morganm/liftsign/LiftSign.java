@@ -33,6 +33,8 @@
  */
 package org.morganm.liftsign;
 
+import java.io.File;
+
 import javax.inject.Inject;
 
 import org.bukkit.command.Command;
@@ -41,6 +43,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.morganm.liftsign.listener.BlockListener;
 import org.morganm.liftsign.listener.PlayerListener;
 import org.morganm.mBukkitLib.Debug;
+import org.morganm.mBukkitLib.JarUtils;
 import org.morganm.mBukkitLib.Logger;
 import org.morganm.mBukkitLib.PermissionSystem;
 import org.morganm.mBukkitLib.i18n.LocaleConfig;
@@ -59,27 +62,23 @@ public class LiftSign extends JavaPlugin {
 	private BlockListener blockListener;
 	private PermissionCheck permCheck;
 	private PermissionSystem permSystem;
-	private Injector injector = Guice.createInjector();
 	
 	private int buildNumber = -1;
 	
 	@Override
 	public void onEnable() {
-		LocaleConfig localeConfig = new LocaleConfig(
-				getConfig().getString("locale", "en"),		// default locale is "en"
-				getDataFolder(),
-				"liftsign",
-				getFile(),
-				getLogger(),
-				null);
+		JarUtils jarUtil = new JarUtils(this, getLogger(), getFile());
+		jarUtil.copyConfigFromJar("config.yml", new File(getDataFolder(), "config.yml"));
+		LocaleConfig localeConfig = new LocaleConfig(getConfig().getString("locale", "en"),
+				getDataFolder(), "liftsign", getFile(), getLogger(), null);
+		
 		// build object graph using Guice dependency injection. This injects
-		// all dependencies for us using our @Inject setters
-		injector = Guice.createInjector(new LiftSignModule(this, localeConfig));
+		// all dependencies for us using the @Inject annotations
+		Injector injector = Guice.createInjector(new LiftSignModule(this, localeConfig));
 		injector.injectMembers(this);
 		
 		debug.setLogFileName("plugins/LiftSign/debug.log");
-		debug.setDebug(true);
-		log.debug("onEnable()");
+		debug.setDebug(getConfig().getBoolean("debug", false));
 		
 		permSystem.setupPermissions();
 		

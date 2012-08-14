@@ -75,6 +75,8 @@ public class LiftSignModule extends AbstractModule {
 		bind(Logger.class)
 			.to(LoggerImpl.class)
 			.in(Scopes.SINGLETON);
+//		bind(java.util.logging.Logger.class)
+//			.toInstance(plugin.getLogger());
 		bind(SignCache.class)
 			.in(Scopes.SINGLETON);
 		bind(Teleport.class)
@@ -85,6 +87,7 @@ public class LiftSignModule extends AbstractModule {
 			.in(Scopes.SINGLETON);
 		bind(Colors.class)
 			.in(Scopes.SINGLETON);
+		
 		
 		install(new FactoryModuleBuilder()
 			.implement(SignDetail.class, SignDetail.class)
