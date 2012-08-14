@@ -33,6 +33,8 @@
  */
 package org.morganm.liftsign;
 
+import java.io.IOException;
+
 import javax.inject.Inject;
 
 import org.bukkit.plugin.Plugin;
@@ -41,6 +43,10 @@ import org.morganm.mBukkitLib.Logger;
 import org.morganm.mBukkitLib.LoggerImpl;
 import org.morganm.mBukkitLib.PermissionSystem;
 import org.morganm.mBukkitLib.Teleport;
+import org.morganm.mBukkitLib.i18n.Colors;
+import org.morganm.mBukkitLib.i18n.Locale;
+import org.morganm.mBukkitLib.i18n.LocaleConfig;
+import org.morganm.mBukkitLib.i18n.LocaleFactory;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
@@ -55,10 +61,13 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
  */
 public class LiftSignModule extends AbstractModule {
 	private final Plugin plugin;
+	private final LocaleConfig localeConfig;
+	private Locale locale;
 
 	@Inject
-	public LiftSignModule(Plugin plugin) {
+	public LiftSignModule(Plugin plugin, LocaleConfig localeConfig) {
 		this.plugin = plugin;
+		this.localeConfig = localeConfig;
 	}
 	
 	@Override
@@ -74,6 +83,8 @@ public class LiftSignModule extends AbstractModule {
 			.in(Scopes.SINGLETON);
 		bind(PermissionSystem.class)
 			.in(Scopes.SINGLETON);
+		bind(Colors.class)
+			.in(Scopes.SINGLETON);
 		
 		install(new FactoryModuleBuilder()
 			.implement(SignDetail.class, SignDetail.class)
@@ -84,5 +95,13 @@ public class LiftSignModule extends AbstractModule {
 	@Provides
 	protected Plugin providePlugin() {
 		return plugin;
+	}
+	
+	@Provides
+	protected Locale provideLocale() throws IOException {
+		if( locale == null )
+			locale = LocaleFactory.getLocale(localeConfig);
+		
+		return locale;
 	}
 }

@@ -1,0 +1,6 @@
+v0.2 - 
+* added internationalization system, English is only locale at this time
+* lots of unit tests added and resulting code fixes
+
+v0.1 - (never released)
+* Initial coding

@@ -65,7 +65,8 @@ public class PlayerListener implements Listener {
 	private final SignFactory factory;
 
 	@Inject
-	public PlayerListener(SignCache cache, SignFactory factory, PermissionCheck perm, Teleport teleport, Logger log, Util util) {
+	public PlayerListener(SignCache cache, SignFactory factory, PermissionCheck perm,
+			Teleport teleport, Logger log, Util util) {
 		this.cache = cache;
 		this.factory = factory;
 		this.perm = perm;
@@ -105,7 +106,7 @@ public class PlayerListener implements Listener {
 			if( targetLift != null && targetSign != null ) {
 				// abort if player doesn't have permission
 				if( !perm.canUseNormalLift(p) ) {
-					p.sendMessage("No permission.");
+					util.getMessageUtil().sendLocalizedMessage(p, Util.MSG_NO_PERMISSION);
 					return;
 				}
 				log.debug("has permission");
@@ -124,14 +125,18 @@ public class PlayerListener implements Listener {
 				
 				if( finalLocation != null ) {
 					event.getPlayer().teleport(finalLocation);
+					if( finalLocation.getBlockY() > playerLocation.getBlockY() )
+						util.getMessageUtil().sendLocalizedMessage(p, Util.MSG_UP_ONE_FLOOR);
+					else
+						util.getMessageUtil().sendLocalizedMessage(p, Util.MSG_DOWN_ONE_FLOOR);
 				}
 				else {
-					p.sendMessage("Destination not safe.");
+					util.getMessageUtil().sendLocalizedMessage(p, Util.MSG_DESTINATION_NOT_SAFE);
 				}
 			}
 			else {
 				log.debug("no target");
-				p.sendMessage("Lift sign has no valid target lift");
+				util.getMessageUtil().sendLocalizedMessage(p, Util.MSG_NO_VALID_LIFT_TARGET);
 			}
 		}
 	}

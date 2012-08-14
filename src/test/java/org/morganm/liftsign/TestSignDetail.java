@@ -17,6 +17,7 @@ import org.junit.Test;
 import org.morganm.liftsign.testutil.TestSignFactory;
 import org.morganm.liftsign.testutil.TestUtility;
 import org.morganm.mBukkitLib.Logger;
+import org.morganm.mBukkitLib.i18n.MessageUtil;
 import org.powermock.api.mockito.PowerMockito;
 
 /**
@@ -38,7 +39,7 @@ public class TestSignDetail {
 		testUtility = new TestUtility();
 		log =  PowerMockito.mock(Logger.class);
 //		log = testUtility.systemOutLogger();
-		util = new Util();
+		this.util = new Util(PowerMockito.mock(MessageUtil.class));
 		testSignFactory = new TestSignFactory(log, util);
 		
 		mockWorld = testUtility.createPopulatedMockWorld(3,10,3);

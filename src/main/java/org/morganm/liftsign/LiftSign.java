@@ -43,6 +43,7 @@ import org.morganm.liftsign.listener.PlayerListener;
 import org.morganm.mBukkitLib.Debug;
 import org.morganm.mBukkitLib.Logger;
 import org.morganm.mBukkitLib.PermissionSystem;
+import org.morganm.mBukkitLib.i18n.LocaleConfig;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -64,9 +65,16 @@ public class LiftSign extends JavaPlugin {
 	
 	@Override
 	public void onEnable() {
+		LocaleConfig localeConfig = new LocaleConfig(
+				getConfig().getString("locale", "en"),		// default locale is "en"
+				getDataFolder(),
+				"liftsign",
+				getFile(),
+				getLogger(),
+				null);
 		// build object graph using Guice dependency injection. This injects
 		// all dependencies for us using our @Inject setters
-		injector = Guice.createInjector(new LiftSignModule(this));
+		injector = Guice.createInjector(new LiftSignModule(this, localeConfig));
 		injector.injectMembers(this);
 		
 		debug.setLogFileName("plugins/LiftSign/debug.log");

@@ -58,6 +58,7 @@ import org.morganm.liftsign.SignFactory;
 import org.morganm.liftsign.Util;
 import org.morganm.liftsign.testutil.TestUtility;
 import org.morganm.mBukkitLib.Logger;
+import org.morganm.mBukkitLib.i18n.MessageUtil;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -71,17 +72,14 @@ import org.powermock.modules.junit4.PowerMockRunner;
 public class TestBlockListener {
 	private TestUtility testUtility;
 	private Logger log;
+	private MessageUtil msgUtil;
 	private Util util;
 	
 	@Before
 	public void setup() {
 		testUtility = new TestUtility();
-
-		// best practice would be to create a mock for this, but at this
-		// time the utility object is simple and it has it's own tests
-		// for validity, so saves a lot of mock code dancing to just use
-		// it directly.
-		this.util = new Util();
+		msgUtil = PowerMockito.mock(MessageUtil.class);
+		util = new Util(msgUtil);
 		
 		log = PowerMockito.mock(Logger.class);
 //		log = testUtility.systemOutLogger();
@@ -117,7 +115,7 @@ public class TestBlockListener {
 		sco.blockListener.onSignChange(sco.event);
 		
 		verify(sco.event).setCancelled(true);
-		verify(sco.player).sendMessage(anyString());
+		verify(msgUtil).sendLocalizedMessage(any(CommandSender.class), anyString()); // got sent a message
 		verify(sco.factory).create(any(Sign.class), any(String[].class));
 		verify(sco.cache, never()).newSignCreated(any(Sign.class));
 		testUtility.cleanupMockWorld(sco.mockWorld);
@@ -143,15 +141,13 @@ public class TestBlockListener {
 		final SignChangeEvent event;
 		final SignFactory factory;
 		final SignCache cache;
-		final Player player;
 		final World mockWorld;
 		public SignChangeObjects(BlockListener blockListener, SignChangeEvent event,
-				SignFactory factory, SignCache cache, Player player, World mockWorld) {
+				SignFactory factory, SignCache cache, World mockWorld) {
 			this.blockListener = blockListener;
 			this.event = event;
 			this.factory = factory;
 			this.cache = cache;
-			this.player = player;
 			this.mockWorld = mockWorld;
 		}
 	}
@@ -182,7 +178,7 @@ public class TestBlockListener {
 		
 		BlockListener blockListener = new BlockListener(cache, perm, factory, log, util);
 		
-		return new SignChangeObjects(blockListener, event, factory, cache, player, mockWorld);
+		return new SignChangeObjects(blockListener, event, factory, cache, mockWorld);
 	}
 	
 	private SignChangeEvent mockSignChangeEvent(final Block block, final String[] lines, final Player player) {

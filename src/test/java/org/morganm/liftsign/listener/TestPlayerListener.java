@@ -5,6 +5,7 @@ package org.morganm.liftsign.listener;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -31,6 +32,7 @@ import org.morganm.liftsign.testutil.TestSignFactory;
 import org.morganm.liftsign.testutil.TestUtility;
 import org.morganm.mBukkitLib.Logger;
 import org.morganm.mBukkitLib.Teleport;
+import org.morganm.mBukkitLib.i18n.MessageUtil;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -45,6 +47,7 @@ public class TestPlayerListener {
 	private TestUtility testUtility;
 	private Logger log;
 	private Util util;
+	private MessageUtil msgUtil;
 	private TestSignFactory testSignFactory;
 	private World mockWorld;
 	private Sign signUp1;
@@ -56,7 +59,8 @@ public class TestPlayerListener {
 	public void setup() {
 		testUtility = new TestUtility();
 		log = PowerMockito.mock(Logger.class);
-		util = new Util();
+		msgUtil = PowerMockito.mock(MessageUtil.class);
+		util = new Util(msgUtil);
 		testSignFactory = new TestSignFactory(log, util);
 		
 		mockWorld = testUtility.createPopulatedMockWorld(4,7,4);
@@ -136,7 +140,7 @@ public class TestPlayerListener {
 		ito.listener.onPlayerInteract(ito.event);
 		
 		// verify
-		verify(ito.player).sendMessage(any(String.class));			// got sent a message
+		verify(msgUtil).sendLocalizedMessage(any(CommandSender.class), anyString()); // got sent a message
 		verify(ito.player, never()).teleport(any(Location.class));	// and did not get teleported
 	}
 	
@@ -184,7 +188,7 @@ public class TestPlayerListener {
 		ito.listener.onPlayerInteract(ito.event);
 		
 		// verify
-		verify(ito.player).sendMessage(any(String.class));			// got sent a message
+		verify(msgUtil).sendLocalizedMessage(any(CommandSender.class), anyString()); // got sent a message
 		verify(ito.player, never()).teleport(any(Location.class));	// and did not get teleported
 	}
 	
@@ -199,7 +203,7 @@ public class TestPlayerListener {
 		ito.listener.onPlayerInteract(ito.event);
 		
 		// verify
-		verify(ito.player).sendMessage(any(String.class));			// got sent a message
+		verify(msgUtil).sendLocalizedMessage(any(CommandSender.class), anyString()); // got sent a message
 		verify(ito.player, never()).teleport(any(Location.class));	// and did not get teleported
 	}
 	

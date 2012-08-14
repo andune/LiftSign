@@ -78,7 +78,7 @@ public class BlockListener implements Listener {
 			if( signDetail.isLiftSign() ) {
 				log.debug("Sign is lift sign");
 				if( !perm.canCreateNormalLift(e.getPlayer()) ) {
-					e.getPlayer().sendMessage("You cannot create lift signs");
+					util.getMessageUtil().sendLocalizedMessage(e.getPlayer(), Util.MSG_NO_PERM_CREATE_LIFT_SIGN);
 					e.setCancelled(true);
 				}
 			}

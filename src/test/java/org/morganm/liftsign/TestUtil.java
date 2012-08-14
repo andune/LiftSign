@@ -41,6 +41,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.junit.Before;
 import org.junit.Test;
+import org.morganm.mBukkitLib.i18n.MessageUtil;
 import org.powermock.api.mockito.PowerMockito;
 
 /**
@@ -72,7 +73,7 @@ public class TestUtil {
 	
 	@Test
 	public void testGetSignState() {
-		Util util = new Util();
+		Util util = new Util(PowerMockito.mock(MessageUtil.class));
 		
 		Sign sign = util.getSignState(notASign);
 		assertNull(sign);
