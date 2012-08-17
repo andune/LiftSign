@@ -44,7 +44,7 @@ import org.morganm.mBukkitLib.PermissionSystem;
  *
  */
 public class PermissionCheck {
-	private static final String BASE = "signlift";
+	private static final String BASE = "liftsign";
 	private static final String CREATE_NORMAL = BASE + ".normal.create";
 	private static final String USE_NORMAL = BASE + ".normal.use";
 	
