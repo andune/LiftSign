@@ -37,8 +37,6 @@ import java.io.File;
 
 import javax.inject.Inject;
 
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.morganm.liftsign.listener.BlockListener;
 import org.morganm.liftsign.listener.PlayerListener;
@@ -60,7 +58,6 @@ public class LiftSign extends JavaPlugin {
 	private Debug debug;
 	private PlayerListener playerListener;
 	private BlockListener blockListener;
-	private PermissionCheck permCheck;
 	private PermissionSystem permSystem;
 	
 	private int buildNumber = -1;
@@ -68,7 +65,11 @@ public class LiftSign extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		JarUtils jarUtil = new JarUtils(this, getLogger(), getFile());
+		// copy default config.yml into place if needed
 		jarUtil.copyConfigFromJar("config.yml", new File(getDataFolder(), "config.yml"));
+		buildNumber = jarUtil.getBuildNumber();
+		
+		// load localized strings for the configured locale
 		LocaleConfig localeConfig = new LocaleConfig(getConfig().getString("locale", "en"),
 				getDataFolder(), "liftsign", getFile(), getLogger(), null);
 		
@@ -93,17 +94,6 @@ public class LiftSign extends JavaPlugin {
 		log.info("version "+getDescription().getVersion()+", build "+buildNumber+" is disabled");
 	}
 	
-	@Override
-	public boolean onCommand(CommandSender sender, Command command,
-			String label, String[] args) {
-		if( label.equals("liftsign") ) {
-			sender.sendMessage("test canCreateNormalLift: "+permCheck.canCreateNormalLift(sender));
-			return true;
-		}
-
-		return false;
-	}
-	
 	@Inject
 	public void setLogger(Logger logger) {
 		this.log = logger;
@@ -122,11 +112,6 @@ public class LiftSign extends JavaPlugin {
 	@Inject
 	public void setBlockListener(BlockListener blockListener) {
 		this.blockListener = blockListener;
-	}
-	
-	@Inject
-	public void setPermissionCheck(PermissionCheck permCheck) {
-		this.permCheck = permCheck;
 	}
 	
 	@Inject
