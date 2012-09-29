@@ -1,3 +1,7 @@
+v0.2.1 - Sep 21, 2012
+* Ticket #1: fix for PEX dependency
+* permission base node changed to "liftsign" instead of "signlift"; this now matches the documentation and was the original intended permissions
+
 v0.2 - Aug 16, 2012
 * added localization system, English is only locale at this time
 * lots of unit tests added, tests found bugs, bugs fixed
