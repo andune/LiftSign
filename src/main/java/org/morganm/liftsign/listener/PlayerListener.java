@@ -91,6 +91,12 @@ public class PlayerListener implements Listener {
 				signDetail = factory.create(sign, null);
 			}
 			
+			// if the sign is not a lift sign, return now, don't do any further
+			// processing.
+			if( !signDetail.isLiftSign() ) {
+				return;
+			}
+			
 			SignDetail targetLift = null;
 			if( signDetail != null )
 				targetLift = signDetail.getTargetLift();
