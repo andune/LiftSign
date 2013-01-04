@@ -1,3 +1,7 @@
+v0.3 - Jan 3, 2013
+* fix for 'no valid target sign' on non-lift related signs
+* fix for reported issue with Vault/PEX
+
 v0.2.1 - Sep 21, 2012
 * Ticket #1: fix for PEX dependency
 * permission base node changed to "liftsign" instead of "signlift"; this now matches the documentation and was the original intended permissions

@@ -35,7 +35,7 @@ package org.morganm.liftsign;
 
 import java.io.IOException;
 
-import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import org.bukkit.plugin.Plugin;
 import org.morganm.mBukkitLib.Debug;
@@ -63,8 +63,8 @@ public class LiftSignModule extends AbstractModule {
 	private final Plugin plugin;
 	private final LocaleConfig localeConfig;
 	private Locale locale;
+	private PermissionSystem permSystem;
 
-	@Inject
 	public LiftSignModule(Plugin plugin, LocaleConfig localeConfig) {
 		this.plugin = plugin;
 		this.localeConfig = localeConfig;
@@ -83,8 +83,6 @@ public class LiftSignModule extends AbstractModule {
 			.in(Scopes.SINGLETON);
 		bind(Debug.class)
 			.in(Scopes.SINGLETON);
-		bind(PermissionSystem.class)
-			.in(Scopes.SINGLETON);
 		bind(Colors.class)
 			.in(Scopes.SINGLETON);
 		
@@ -96,14 +94,24 @@ public class LiftSignModule extends AbstractModule {
 	}
 	
 	@Provides
+	@Singleton
+	protected PermissionSystem providePermissionSystem() {
+		if( permSystem == null )
+			permSystem = new org.morganm.mBukkitLib.PermissionSystem(plugin, plugin.getLogger());
+		return permSystem;
+	}
+	
+	@Provides
 	protected Plugin providePlugin() {
 		return plugin;
 	}
 	
 	@Provides
 	protected Locale provideLocale() throws IOException {
-		if( locale == null )
-			locale = LocaleFactory.getLocale(localeConfig);
+        if( locale == null ) {
+			locale = LocaleFactory.getLocale();
+			locale.load(localeConfig);
+        }
 		
 		return locale;
 	}

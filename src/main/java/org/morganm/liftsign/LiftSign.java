@@ -34,6 +34,7 @@
 package org.morganm.liftsign;
 
 import java.io.File;
+import java.io.IOException;
 
 import javax.inject.Inject;
 
@@ -43,7 +44,6 @@ import org.morganm.liftsign.listener.PlayerListener;
 import org.morganm.mBukkitLib.Debug;
 import org.morganm.mBukkitLib.JarUtils;
 import org.morganm.mBukkitLib.Logger;
-import org.morganm.mBukkitLib.PermissionSystem;
 import org.morganm.mBukkitLib.i18n.LocaleConfig;
 
 import com.google.inject.Guice;
@@ -58,20 +58,25 @@ public class LiftSign extends JavaPlugin {
 	private Debug debug;
 	private PlayerListener playerListener;
 	private BlockListener blockListener;
-	private PermissionSystem permSystem;
+	private Permissions permSystem;
 	
 	private int buildNumber = -1;
 	
 	@Override
 	public void onEnable() {
-		JarUtils jarUtil = new JarUtils(this, getLogger(), getFile());
+		JarUtils jarUtil = new JarUtils(getDataFolder(), getFile());
 		// copy default config.yml into place if needed
-		jarUtil.copyConfigFromJar("config.yml", new File(getDataFolder(), "config.yml"));
+		try {
+			jarUtil.copyConfigFromJar("config.yml", new File(getDataFolder(), "config.yml"));
+		}
+		catch(IOException e) {
+			log.warn("Error copying default config file into place: "+e.getMessage());
+		}
 		buildNumber = jarUtil.getBuildNumber();
 		
 		// load localized strings for the configured locale
 		LocaleConfig localeConfig = new LocaleConfig(getConfig().getString("locale", "en"),
-				getDataFolder(), "liftsign", getFile(), getLogger(), null);
+				getDataFolder(), "liftsign", getFile(), null);
 		
 		// build object graph using Guice dependency injection. This injects
 		// all dependencies for us using the @Inject annotations
@@ -81,7 +86,7 @@ public class LiftSign extends JavaPlugin {
 		debug.setLogFileName("plugins/LiftSign/debug.log");
 		debug.setDebug(getConfig().getBoolean("debug", false));
 		
-		permSystem.setupPermissions();
+		permSystem.init();
 		
 		getServer().getPluginManager().registerEvents(playerListener, this);
 		getServer().getPluginManager().registerEvents(blockListener, this);
@@ -115,7 +120,7 @@ public class LiftSign extends JavaPlugin {
 	}
 	
 	@Inject
-	public void setPermissionSystem(PermissionSystem permSystem) {
+	public void setPermissionSystem(Permissions permSystem) {
 		this.permSystem = permSystem;
 	}
 }

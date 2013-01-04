@@ -42,7 +42,6 @@ import static org.mockito.Mockito.when;
 import org.bukkit.command.CommandSender;
 import org.junit.Before;
 import org.junit.Test;
-import org.morganm.mBukkitLib.PermissionSystem;
 import org.powermock.api.mockito.PowerMockito;
 
 /**
@@ -50,16 +49,16 @@ import org.powermock.api.mockito.PowerMockito;
  *
  */
 public class TestPermissionCheck {
-	private PermissionSystem permSystemAllTrue;
-	private PermissionSystem permSystemAllFalse;
+	private Permissions permSystemAllTrue;
+	private Permissions permSystemAllFalse;
 	private CommandSender mockSender;
 	
 	@Before
 	public void setup() {
 		mockSender = PowerMockito.mock(CommandSender.class);
-		permSystemAllTrue = PowerMockito.mock(PermissionSystem.class);
+		permSystemAllTrue = PowerMockito.mock(Permissions.class);
 		when(permSystemAllTrue.has(eq(mockSender), anyString())).thenReturn(true);
-		permSystemAllFalse = PowerMockito.mock(PermissionSystem.class);
+		permSystemAllFalse = PowerMockito.mock(Permissions.class);
 		when(permSystemAllTrue.has(eq(mockSender), anyString())).thenReturn(true);
 	}
 	
