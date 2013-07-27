@@ -1,15 +1,15 @@
-/*******************************************************************************
+/**
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
- * Copyright (c) 2012 Mark Morgan.
+ *
+ * Copyright (c) 2013 Andune (andune.alleria@gmail.com)
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
@@ -19,19 +19,16 @@
  * notice, this list of conditions and the following disclaimer
  * in the documentation and/or other materials provided with the
  * distribution.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
- * Contributors:
- *     Mark Morgan - initial API and implementation
- ******************************************************************************/
+ */
 /**
  * 
  */
-package org.morganm.liftsign;
+package com.andune.liftsign;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -41,14 +38,14 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
-import org.morganm.mBukkitLib.Logger;
 
+import com.andune.minecraft.commonlib.Logger;
 import com.google.inject.assistedinject.Assisted;
 
 /** Object to track details about a known sign. Details are stored so they
  * only have to be processed once.
  * 
- * @author morganm
+ * @author andune
  *
  */
 public class SignDetail {
@@ -99,7 +96,7 @@ public class SignDetail {
 			lines = sign.getLines();
 		
 		isLiftSign = false;
-		log.debug("new SignDetail object. lines=",lines);
+		log.debug("new SignDetail object. lines={}",lines);
 		if( lines != null && lines.length > 1 ) {
 			log.debug("lines[1]=",lines[1]);
 			if( lines[1].equalsIgnoreCase("[lift up]") ) {

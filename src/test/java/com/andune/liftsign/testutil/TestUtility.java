@@ -1,15 +1,15 @@
-/*******************************************************************************
+/**
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
- * Copyright (c) 2012 Mark Morgan.
+ *
+ * Copyright (c) 2013 Andune (andune.alleria@gmail.com)
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
@@ -19,23 +19,22 @@
  * notice, this list of conditions and the following disclaimer
  * in the documentation and/or other materials provided with the
  * distribution.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
- * Contributors:
- *     Mark Morgan - initial API and implementation
- ******************************************************************************/
+ */
 /**
  * 
  */
-package org.morganm.liftsign.testutil;
+package com.andune.liftsign.testutil;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyVararg;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.when;
 
@@ -51,12 +50,13 @@ import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
-import org.morganm.mBukkitLib.Logger;
 import org.powermock.api.mockito.PowerMockito;
+
+import com.andune.minecraft.commonlib.Logger;
 
 /** General utility routines common to multiple tests.
  * 
- * @author morganm
+ * @author andune
  *
  */
 public class TestUtility {
@@ -307,9 +307,14 @@ public class TestUtility {
 				return null;
 			}};
 			
-		doAnswer(answer).when(log).debug(anyVararg());
-		doAnswer(answer).when(log).devDebug(anyVararg());
-		doAnswer(answer).when(log).info(anyVararg());
+		doAnswer(answer).when(log).debug(anyString());
+		doAnswer(answer).when(log).debug(anyString(), anyObject());
+		doAnswer(answer).when(log).debug(anyString(), anyObject(), anyObject());
+		doAnswer(answer).when(log).debug(anyString(), anyVararg());
+		doAnswer(answer).when(log).info(anyString());
+		doAnswer(answer).when(log).info(anyString(), anyObject());
+		doAnswer(answer).when(log).info(anyString(), anyObject(), anyObject());
+		doAnswer(answer).when(log).info(anyString(), anyVararg());
 		
 		return log;
 	}

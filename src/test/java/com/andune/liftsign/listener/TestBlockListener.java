@@ -1,15 +1,15 @@
-/*******************************************************************************
+/**
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
- * Copyright (c) 2012 Mark Morgan.
+ *
+ * Copyright (c) 2013 Andune (andune.alleria@gmail.com)
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
@@ -19,19 +19,16 @@
  * notice, this list of conditions and the following disclaimer
  * in the documentation and/or other materials provided with the
  * distribution.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
- * Contributors:
- *     Mark Morgan - initial API and implementation
- ******************************************************************************/
+ */
 /**
  * 
  */
-package org.morganm.liftsign.listener;
+package com.andune.liftsign.listener;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
@@ -51,20 +48,21 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
-import org.morganm.liftsign.PermissionCheck;
-import org.morganm.liftsign.SignCache;
-import org.morganm.liftsign.SignDetail;
-import org.morganm.liftsign.SignFactory;
-import org.morganm.liftsign.Util;
-import org.morganm.liftsign.testutil.TestUtility;
-import org.morganm.mBukkitLib.Logger;
-import org.morganm.mBukkitLib.i18n.MessageUtil;
+import com.andune.liftsign.MessageUtil;
+import com.andune.liftsign.PermissionCheck;
+import com.andune.liftsign.SignCache;
+import com.andune.liftsign.SignDetail;
+import com.andune.liftsign.SignFactory;
+import com.andune.liftsign.Util;
+import com.andune.liftsign.testutil.TestUtility;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import com.andune.minecraft.commonlib.Logger;
+
 /**
- * @author morganm
+ * @author andune
  *
  */
 @RunWith(PowerMockRunner.class)

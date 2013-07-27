@@ -1,15 +1,15 @@
-/*******************************************************************************
+/**
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
- * Copyright (c) 2012 Mark Morgan.
+ *
+ * Copyright (c) 2013 Andune (andune.alleria@gmail.com)
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
@@ -19,19 +19,16 @@
  * notice, this list of conditions and the following disclaimer
  * in the documentation and/or other materials provided with the
  * distribution.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
- * Contributors:
- *     Mark Morgan - initial API and implementation
- ******************************************************************************/
+ */
 /**
  * 
  */
-package org.morganm.liftsign;
+package com.andune.liftsign;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,18 +36,18 @@ import java.io.IOException;
 import javax.inject.Inject;
 
 import org.bukkit.plugin.java.JavaPlugin;
-import org.morganm.liftsign.listener.BlockListener;
-import org.morganm.liftsign.listener.PlayerListener;
-import org.morganm.mBukkitLib.Debug;
-import org.morganm.mBukkitLib.JarUtils;
-import org.morganm.mBukkitLib.Logger;
-import org.morganm.mBukkitLib.i18n.LocaleConfig;
+import com.andune.liftsign.listener.BlockListener;
+import com.andune.liftsign.listener.PlayerListener;
 
+import com.andune.minecraft.commonlib.Debug;
+import com.andune.minecraft.commonlib.JarUtils;
+import com.andune.minecraft.commonlib.Logger;
+import com.andune.minecraft.commonlib.i18n.LocaleConfig;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
 /**
- * @author morganm
+ * @author andune
  *
  */
 public class LiftSign extends JavaPlugin {
@@ -60,7 +57,7 @@ public class LiftSign extends JavaPlugin {
 	private BlockListener blockListener;
 	private Permissions permSystem;
 	
-	private int buildNumber = -1;
+	private String buildNumber = "unknown";
 	
 	@Override
 	public void onEnable() {
@@ -72,7 +69,7 @@ public class LiftSign extends JavaPlugin {
 		catch(IOException e) {
 			log.warn("Error copying default config file into place: "+e.getMessage());
 		}
-		buildNumber = jarUtil.getBuildNumber();
+		buildNumber = jarUtil.getBuild();
 		
 		// load localized strings for the configured locale
 		LocaleConfig localeConfig = new LocaleConfig(getConfig().getString("locale", "en"),

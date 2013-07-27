@@ -2,303 +2,298 @@
   Maven build file for LiftSign
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>org.morganm.liftsign</groupId>
-  <artifactId>LiftSign</artifactId>
-  <version>0.3</version>
-  <name>LiftSign</name>
-  <description>CraftBukkit/SignLift compatible open source Lift Signs for Bukkit</description>
-  <url>https://dev.bukkit.org/server-mods/LiftSign/</url>
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.andune.liftsign</groupId>
+    <artifactId>LiftSign</artifactId>
+    <version>0.4-SNAPSHOT</version>
+    <name>LiftSign</name>
+    <description>CraftBukkit/SignLift compatible open source Lift Signs for Bukkit</description>
+    <url>https://dev.bukkit.org/server-mods/LiftSign/</url>
 
-  <scm>
-    <connection>scm:git:git://github.com/morganm/LiftSign.git</connection>
-    <url>https://github.com/morganm/LiftSign</url>
-    <developerConnection>scm:git:git@github.com:morganm/LiftSign.git</developerConnection>
-  </scm>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.build.timestamp.format>yyyyMMdd-HHmm</maven.build.timestamp.format>
+        <build.number>${maven.build.timestamp}</build.number>
+    </properties>
 
-  <distributionManagement>
-    <snapshotRepository>
-      <id>morganm-repo-snapshot</id>
-      <name>Morganmc nexus repository</name>
-      <url>http://morganmc.dyndns.org/nexus/content/repositories/snapshots/</url>
-    </snapshotRepository>
-  </distributionManagement>
+    <scm>
+        <connection>scm:git:git://github.com/andune/LiftSign.git</connection>
+        <url>https://github.com/andune/LiftSign</url>
+        <developerConnection>scm:git:git@github.com:andune/LiftSign.git</developerConnection>
+    </scm>
 
-  <repositories>
-    <repository>
-      <id>onarandombox</id>
-      <url>http://repo.onarandombox.com/content/groups/public</url>
-    </repository>
-    <repository>
-      <id>bukkit-repo</id>
-      <url>http://repo.bukkit.org/content/groups/public/</url>
-    </repository>
-    <repository>
-      <id>morganm-repo</id>
-      <url>http://morganmc.dyndns.org/nexus/content/groups/public/</url>
-    </repository>
-  </repositories>
+    <distributionManagement>
+        <snapshotRepository>
+            <id>andune-repo-snapshot</id>
+            <name>Andune nexus repository</name>
+            <url>http://andune.com/nexus/content/repositories/snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
 
-  <dependencies>
-    <!-- Bukkit -->
-    <dependency>
-      <groupId>org.bukkit</groupId>
-      <artifactId>bukkit</artifactId>
-      <version>1.4.6-R0.3</version>
-    </dependency>
+    <repositories>
+        <repository>
+            <id>onarandombox</id>
+            <url>http://repo.onarandombox.com/content/groups/public</url>
+        </repository>
+        <repository>
+            <id>bukkit-repo</id>
+            <url>http://repo.bukkit.org/content/groups/public/</url>
+        </repository>
+        <repository>
+            <id>andune-repo</id>
+            <url>http://andune.com/nexus/content/groups/public/</url>
+        </repository>
+    </repositories>
 
-    <!-- Dependency Injection (guice) -->
-    <dependency>
-      <groupId>com.google.inject</groupId>
-      <artifactId>guice</artifactId>
-      <version>3.0</version>
-    </dependency>
-    <dependency>
-      <groupId>com.google.inject.extensions</groupId>
-      <artifactId>guice-assistedinject</artifactId>
-      <version>3.0</version>
-    </dependency>
+    <dependencies>
+        <!-- Bukkit -->
+        <dependency>
+            <groupId>org.bukkit</groupId>
+            <artifactId>bukkit</artifactId>
+            <version>1.6.2-R0.1-SNAPSHOT</version>
+        </dependency>
 
-    <!-- Common library -->
-    <dependency>
-      <groupId>org.morganm.mBukkitLib</groupId>
-      <artifactId>mBukkitLib</artifactId>
-      <version>0.3.1</version>
-    </dependency>
+        <!-- Dependency Injection (guice) -->
+        <dependency>
+            <groupId>com.google.inject</groupId>
+            <artifactId>guice</artifactId>
+            <version>3.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.inject.extensions</groupId>
+            <artifactId>guice-assistedinject</artifactId>
+            <version>3.0</version>
+        </dependency>
 
-    <!-- Start of Test Dependencies -->
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.8.2</version>
-    </dependency>
-    <dependency>
-      <groupId>org.powermock</groupId>
-      <artifactId>powermock-module-junit4</artifactId>
-      <version>1.4.9</version>
-      <type>jar</type>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.powermock</groupId>
-      <artifactId>powermock-api-easymock</artifactId>
-      <version>1.4.9</version>
-      <type>jar</type>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.powermock</groupId>
-      <artifactId>powermock-api-mockito</artifactId>
-      <version>1.4.9</version>
-      <type>jar</type>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.easymock</groupId>
-      <artifactId>easymock</artifactId>
-      <version>3.0</version>
-      <scope>test</scope>
-    </dependency>
-    <!-- End of Test Dependencies -->
-  </dependencies>
+        <!-- Reflections library and it's dependency -->
+        <dependency>
+            <groupId>org.reflections</groupId>
+            <artifactId>reflections</artifactId>
+            <version>0.9.8</version>
+        </dependency>
+        <dependency>
+            <groupId>javassist</groupId>
+            <artifactId>javassist</artifactId>
+            <version>3.12.1.GA</version>
+            <scope>runtime</scope>
+        </dependency>
 
-  <build>
-    <sourceDirectory>${basedir}/src/main/java</sourceDirectory>
-    <finalName>${project.artifactId}</finalName>
+        <!-- Common library -->
+        <dependency>
+            <groupId>com.andune.minecraft.commonlib</groupId>
+            <artifactId>commonlib</artifactId>
+            <version>0.5-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.andune.minecraft.commonlib</groupId>
+            <artifactId>commonBukkitlib</artifactId>
+            <version>0.5-SNAPSHOT</version>
+        </dependency>
 
-    <!-- Resources -->
-    <resources>
-      <resource>
-        <targetPath>.</targetPath>
-        <directory>${basedir}/src/main/resources/</directory>
-      </resource>
-      <resource>
-        <targetPath>.</targetPath>
-        <directory>${basedir}</directory>
-        <filtering>true</filtering>
-        <includes>
-          <include>build.number</include>
-        </includes>
-      </resource>
-      <resource>
-        <directory>src/main/resources</directory>
-        <filtering>true</filtering>
-        <includes>
-          <include>plugin.yml</include>
-        </includes>
-      </resource>
-    </resources>
+        <!-- Start of Test Dependencies -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.8.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-module-junit4</artifactId>
+            <version>1.4.9</version>
+            <type>jar</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-api-easymock</artifactId>
+            <version>1.4.9</version>
+            <type>jar</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-api-mockito</artifactId>
+            <version>1.4.9</version>
+            <type>jar</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.easymock</groupId>
+            <artifactId>easymock</artifactId>
+            <version>3.0</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- End of Test Dependencies -->
+    </dependencies>
 
-    <!-- Plugins -->
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-antrun-plugin</artifactId>
-        <version>1.7</version><!--$NO-MVN-MAN-VER$-->
-        <executions>
-          <execution>
-            <phase>package</phase>
-            <configuration>
-              <target>
-                <buildnumber />
-              </target>
-            </configuration>
-            <goals>
-              <goal>run</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
+    <build>
+        <sourceDirectory>${basedir}/src/main/java</sourceDirectory>
+        <finalName>${project.artifactId}</finalName>
 
-      <!-- Compile plugin -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>2.4</version>
-        <configuration>
-          <verbose>true</verbose>
-          <fork>true</fork>
-          <source>1.6</source>
-          <target>1.6</target>
-          <compilerVersion>1.6</compilerVersion>
-        </configuration>
-      </plugin>
-
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-shade-plugin</artifactId>
-        <version>1.7.1</version>
-        <executions>
-          <execution>
-            <phase>package</phase>
-            <goals>
-              <goal>shade</goal>
-            </goals>
-            <configuration>
-              <artifactSet>
+        <!-- Resources -->
+        <resources>
+            <resource>
+                <targetPath>.</targetPath>
+                <directory>${basedir}/src/main/resources/</directory>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
                 <includes>
-                  <include>com.google.inject:guice</include>
-                  <include>com.google.inject.extensions:guice-assistedinject</include>
-                  <include>org.morganm.mBukkitLib:mBukkitLib</include>
-                  <include>org.slf4j:slf4j-api</include>
-                  <include>org.slf4j:slf4j-jdk14</include>
+                    <include>plugin.yml</include>
                 </includes>
-              </artifactSet>
+            </resource>
+        </resources>
 
-<!--
-              <filters>
-                <filter>
-                  <artifact>com.sk89q:worldedit</artifact>
-                  <includes>
-                    <include>com/sk89q/wepif/PermissionsResolver.class</include>
-                    <include>com/sk89q/wepif/PermissionsProvider.class</include>
-                  </includes>
-                </filter>
-                <filter>
-                  <artifact>net.milkbowl.vault:Vault</artifact>
-                  <includes>
-                    <include>net/milkbowl/vault/permission/Permission.class</include>
-                  </includes>
-                </filter>
-                <filter>
-                  <artifact>com.nijiko:permissions</artifact>
-                  <includes>
-                    <include>com/nijiko/permissions/PermissionHandler.class</include>
-                  </includes>
-                </filter>
-              </filters>
--->
+        <!-- Plugins -->
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.7</version><!--$NO-MVN-MAN-VER$-->
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <configuration>
+                            <target>
+                                <buildnumber />
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Compile plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <verbose>true</verbose>
+                    <fork>true</fork>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                    <compilerVersion>1.6</compilerVersion>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>1.7.1</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <artifactSet>
+                                <includes>
+                                    <include>com.google.inject:guice</include>
+                                    <include>javax.inject:javax.inject</include>
+                                    <include>aopalliance:aopalliance</include>
+                                    <include>com.google.inject.extensions:guice-assistedinject</include>
+                                    <include>com.andune.minecraft.commonlib:commonlib</include>
+                                    <include>com.andune.minecraft.commonlib:commonBukkitlib</include>
+                                    <include>org.slf4j:slf4j-api</include>
+                                    <include>org.slf4j:slf4j-jdk14</include>
+                                    <include>org.reflections:reflections</include>
+                                    <include>javassist:javassist</include>
+                                </includes>
+                            </artifactSet>
+
+                            <filters>
+                                <filter>
+                                    <artifact>com.andune.minecraft.commonlib:commonlib</artifact>
+                                    <excludes>
+                                        <exclude>javax/inject/**</exclude>
+                                        <exclude>org/aopalliance/**</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
 
 
-              <relocations>
-<!--
-                <relocation>
-                  <pattern>org.slf4j</pattern>
-                  <shadedPattern>${project.groupId}.slf4j</shadedPattern>
-                </relocation>
--->
-                <relocation>
-                  <pattern>com.google.inject</pattern>
-                  <shadedPattern>${project.groupId}.guice</shadedPattern>
-                </relocation>
-              </relocations>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
+                            <relocations>
+                                <relocation>
+                                    <pattern>com.google.inject</pattern>
+                                    <shadedPattern>${project.groupId}.shade.guice</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>com.andune.minecraft.commonlib</pattern>
+                                    <shadedPattern>${project.groupId}.shade.commonlib</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>org.reflections</pattern>
+                                    <shadedPattern>${project.groupId}.shade.reflections</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>javassist</pattern>
+                                    <shadedPattern>${project.groupId}.shade.javassist</shadedPattern>
+                                </relocation>
+                            </relocations>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
 
-<!--
-      <plugin>
-          <groupId>com.google.code.maven-replacer-plugin</groupId>
-          <artifactId>maven-replacer-plugin</artifactId>
-          <version>1.3.8</version>
-          <executions>
-              <execution>
-                  <phase>prepare-package</phase>
-                  <goals>
-                      <goal>replace</goal>
-                  </goals>
-              </execution>
-          </executions>
-          <configuration>
-              <file>target/classes/plugin.yml</file>
-              <replacements>
-                  <replacement>
-                      <token>maven-version-number</token>
-                      <value>${project.version}-b${project.build.number}</value>
-                  </replacement>
-              </replacements>
-          </configuration>
-      </plugin>
--->
+            <!-- JAR creation plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.3.1</version>
+                <configuration>
+                    <archive>
+                        <addMavenDescriptor>true</addMavenDescriptor>
+                        <manifest>
+                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                        </manifest>
+                        <manifestEntries>
+                            <Implementation-Build>${build.number}</Implementation-Build>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
 
-      <!-- JAR creation plugin -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
-        <version>2.3.1</version>
-        <configuration>
-          <archive>
-            <addMavenDescriptor>true</addMavenDescriptor>
-            <manifest>
-              <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
-              <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-            </manifest>
-            <manifestEntries>
-              <Implementation-Build>${buildNumber}</Implementation-Build>
-            </manifestEntries>
-          </archive>
-        </configuration>
-      </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.12.4</version>
+            </plugin>
 
-      <!-- Assembly -->
-<!--
-      <plugin>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <version>2.2-beta-2</version>
-        <configuration>
-          <descriptor>${basedir}/src/main/assembly/default.xml</descriptor>
-        </configuration>
-      </plugin>
--->
+            <!-- Release -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.2.2</version><!--$NO-MVN-MAN-VER$-->
+                <configuration>
+                    <preparationGoals>assembly:assembly</preparationGoals>
+                    <goals>assembly:assembly</goals>
+                    <tagNameFormat>@{project.version}</tagNameFormat>
+                </configuration>
+            </plugin>
 
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <version>2.12.4</version>
-      </plugin>
-
-      <!-- Release -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-release-plugin</artifactId>
-        <version>2.2.2</version><!--$NO-MVN-MAN-VER$-->
-        <configuration>
-          <preparationGoals>assembly:assembly</preparationGoals>
-          <goals>assembly:assembly</goals>
-          <tagNameFormat>@{project.version}</tagNameFormat>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
+            <!-- License check; run 'mvn license:check' or 'mvn license:format' -->
+            <plugin>
+                <groupId>com.mycila.maven-license-plugin</groupId>
+                <artifactId>maven-license-plugin</artifactId>
+                <version>1.9.0</version>
+                <configuration>
+                    <header>src/main/license/header.txt</header>
+                    <strictCheck>true</strictCheck>
+                    <excludes>
+                        <exclude>**/src/main/resources/**</exclude>
+                        <exclude>**/src/main/license/**</exclude>
+                        <exclude>**/.idea/**</exclude>
+                        <exclude>**/*.md</exclude>
+                        <exclude>*.txt</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

@@ -1,10 +1,10 @@
 name: ${project.name}
-main: ${groupId}.${project.name}
+main:  ${groupId}.${project.name}
 url: ${project.url}
 version: ${project.version}
-author: morganm
+author: andune
 database: false
-softdepend: [Vault, WorldEdit, Permissions, PermissionsEx]
+softdepend: [Vault, WorldEdit]
 permissions:
     liftsign.*:
         description: Gives access to all LiftSign permissions
