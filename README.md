@@ -22,6 +22,6 @@ The only real downside is that the downloadable JAR is "fatter" by virtue of inc
 
 Sonar
 -----
-Sonar was used in the development of this plugin, which applies static code analysis to look for obvious bugs and make sure the code is wellformatted. However, there are a few tweaks to the default rules that appeal to my personal coding style, such as not requiring braces {} for all if/else conditionals.
+Sonar was used in the development of this plugin, which applies static code analysis to look for obvious bugs and make sure the code is well formatted. I use the "Sonar way with Findbugs" profile with a few tweaks to the default rules that appeal to my personal coding style, such as not requiring braces {} for all if/else conditionals.
 
-If you wish to contribute and want to use Sonar to validate code you write, you can install Sonar (http://www.sonarqube.org/), install my quality profile (http://goo.gl/COZFCo) using 'Restore Profile' and then run "mvn sonar:sonar" on the project to get your own Sonar report. Note sonar allows you to assign per-project rulesets, so if you don't like my settings for your other projects, you can assign my ruleset just for this project.
+If you wish to contribute and want to use Sonar to validate code you write, you can install Sonar (http://www.sonarqube.org/), install my quality profile (http://goo.gl/COZFCo) into your Sonar installation using 'Restore Profile' and then run "mvn sonar:sonar" on the project to get your own Sonar report. Note sonar allows you to assign per-project quality profiles so if you don't like my settings for your other projects you can assign my profile just for this project.
