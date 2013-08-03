@@ -26,7 +26,7 @@
  * GNU General Public License for more details.
  */
 /**
- * 
+ *
  */
 package com.andune.liftsign;
 
@@ -34,8 +34,7 @@ import org.bukkit.block.Sign;
 
 /**
  * @author andune
- *
  */
 public interface SignFactory {
-	public SignDetail create(Sign sign, String[] lines);
+    SignDetail create(Sign sign, String[] lines);
 }

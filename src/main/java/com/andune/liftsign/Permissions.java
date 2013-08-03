@@ -26,45 +26,44 @@
  * GNU General Public License for more details.
  */
 /**
- * 
+ *
  */
 package com.andune.liftsign;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import com.andune.minecraft.commonlib.PermissionSystemImpl;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
-
 import org.reflections.Reflections;
 
-/** Wrapper for mBukkitLib PermissionSystem, since Guice scans all member
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+/**
+ * Wrapper for mBukkitLib PermissionSystem, since Guice scans all member
  * variables looking for @Inject annotations and causes a CNFE on
  * PermissionSystem since it references plugins that may not exist at
  * runtime (such as Vault and WEPIF).
- * 
- * @author andune
  *
+ * @author andune
  */
 @Singleton
 public class Permissions {
-	private final Plugin plugin;
-	private PermissionSystemImpl permSystem;
+    private final Plugin plugin;
+    private PermissionSystemImpl permSystem;
     private Reflections reflections;
-	
-	@Inject
-	public Permissions(Plugin plugin, Reflections reflections) {
-		this.plugin = plugin;
-        this.reflections = reflections;
-	}
-	
-	public void init() {
-		permSystem = new PermissionSystemImpl(plugin, reflections);
-		permSystem.setupPermissions(true);
-	}
 
-	public boolean has(CommandSender sender, String permission) {
-		return permSystem.has(sender, permission);
-	}
+    @Inject
+    public Permissions(Plugin plugin, Reflections reflections) {
+        this.plugin = plugin;
+        this.reflections = reflections;
+    }
+
+    public void init() {
+        permSystem = new PermissionSystemImpl(plugin, reflections);
+        permSystem.setupPermissions(true);
+    }
+
+    public boolean has(CommandSender sender, String permission) {
+        return permSystem.has(sender, permission);
+    }
 }

@@ -26,30 +26,28 @@
  * GNU General Public License for more details.
  */
 /**
- * 
+ *
  */
 package com.andune.liftsign;
 
-import javax.inject.Inject;
-
+import com.andune.minecraft.commonlib.i18n.Locale;
 import org.bukkit.command.CommandSender;
 
-import com.andune.minecraft.commonlib.i18n.Locale;
+import javax.inject.Inject;
 
 /**
  * @author andune
- *
  */
 public class MessageUtil {
-	private final Locale locale;
-	
-	@Inject
-	public MessageUtil(Locale locale) {
-		this.locale = locale;
-	}
-	
-	public void sendLocalizedMessage(CommandSender target, String msgKey, Object...args) {
-	    target.sendMessage(locale.getMessage(msgKey, args));
-	  }
+    private final Locale locale;
+
+    @Inject
+    public MessageUtil(Locale locale) {
+        this.locale = locale;
+    }
+
+    public void sendLocalizedMessage(CommandSender target, String msgKey, Object... args) {
+        target.sendMessage(locale.getMessage(msgKey, args));
+    }
 }
 

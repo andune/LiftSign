@@ -26,103 +26,104 @@
  * GNU General Public License for more details.
  */
 /**
- * 
+ *
  */
 package com.andune.liftsign;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.inject.Inject;
 
 import org.bukkit.Location;
 import org.bukkit.block.Sign;
 
-/** Class for keeping track of known signs and their lift status. This avoids
+import javax.inject.Inject;
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * Class for keeping track of known signs and their lift status. This avoids
  * additional processing as signs are clicked by only processing sign details
  * once.
- * 
+ * <p/>
  * General strategy: When a lift sign is placed or destroyed, we iterate through
  * existing lifts to find any possible matches for that lift and do the linking.
- * 
- * @author andune
  *
+ * @author andune
  */
 public class SignCache {
-	private final Map<String, SignDetail> signs = new HashMap<String, SignDetail>();
-	private final SignFactory factory;
-	
-	@Inject
-	public SignCache(SignFactory factory) {
-		this.factory = factory;
-	}
-	
-	public SignDetail getCachedSignDetail(Location location) {
-		final String locationString = getLocationKey(location);
-		SignDetail signDetail = signs.get(locationString);
-		return signDetail;
-	}
-	
-	/** To be called when a new sign is created or when an existing sign
-	 * is noticed in-game and we want to tell the cache about it.
-	 * 
-	 * @param sign
-	 * @return
-	 */
-	public SignDetail newSignCreated(Sign sign) {
-		SignDetail signDetail = getCachedSignDetail(sign.getLocation());
+    private final Map<String, SignDetail> signs = new HashMap<String, SignDetail>();
+    private final SignFactory factory;
 
-		// in theory shouldn't happen, but deal with this situation if it does
-		if( signDetail != null ) {
-			invalidateCacheLocation(signDetail);
-			signs.remove(getLocationKey(signDetail.getLocation()));
-		}
-		
-		signDetail = factory.create(sign, null);
-		signs.put(getLocationKey(signDetail), signDetail);
-		invalidateCacheLocation(signDetail);
-		return signDetail;
-	}
-	
-	/** Same as {@link #newSignCreated(Sign)} except the SignDetail object
-	 * has already been created and is passed in. 
-	 * 
-	 * @param signDetail
-	 * @return
-	 */
-	public SignDetail newSignCreated(SignDetail signDetail) {
-		SignDetail cached = signs.get(getLocationKey(signDetail));
+    @Inject
+    public SignCache(SignFactory factory) {
+        this.factory = factory;
+    }
 
-		// in theory shouldn't happen, but deal with this situation if it does
-		if( cached != null ) {
-			invalidateCacheLocation(cached);
-			signs.remove(getLocationKey(cached));
-		}
-		
-		signs.put(getLocationKey(signDetail), signDetail);
-		invalidateCacheLocation(signDetail);
-		return signDetail;
-	}
+    public SignDetail getCachedSignDetail(Location location) {
+        final String locationString = getLocationKey(location);
+        return signs.get(locationString);
+    }
 
-	public void existingSignDestroyed(Sign sign) {
-		SignDetail signDetail = getCachedSignDetail(sign.getLocation());
-		if( signDetail != null ) {
-			signs.remove(getLocationKey(signDetail));
-			if( signDetail.isLiftSign() )
-				invalidateCacheLocation(signDetail);
-		}
-	}
-	
-	private void invalidateCacheLocation(SignDetail signDetail) {
-		for(SignDetail val : signs.values()) {
-			val.clearCache(signDetail);
-		}
-	}
-	
-	private String getLocationKey(final Location l) {
-		return l.getWorld().getName()+","+l.getBlockX()+","+l.getBlockY()+","+l.getBlockZ();
-	}
-	private String getLocationKey(final SignDetail signDetail) {
-		return getLocationKey(signDetail.getLocation());
-	}
+    /**
+     * To be called when a new sign is created or when an existing sign
+     * is noticed in-game and we want to tell the cache about it.
+     *
+     * @param sign
+     * @return
+     */
+    public SignDetail newSignCreated(Sign sign) {
+        SignDetail signDetail = getCachedSignDetail(sign.getLocation());
+
+        // in theory shouldn't happen, but deal with this situation if it does
+        if (signDetail != null) {
+            invalidateCacheLocation(signDetail);
+            signs.remove(getLocationKey(signDetail.getLocation()));
+        }
+
+        signDetail = factory.create(sign, null);
+        signs.put(getLocationKey(signDetail), signDetail);
+        invalidateCacheLocation(signDetail);
+        return signDetail;
+    }
+
+    /**
+     * Same as {@link #newSignCreated(Sign)} except the SignDetail object
+     * has already been created and is passed in.
+     *
+     * @param signDetail
+     * @return
+     */
+    public SignDetail newSignCreated(SignDetail signDetail) {
+        SignDetail cached = signs.get(getLocationKey(signDetail));
+
+        // in theory shouldn't happen, but deal with this situation if it does
+        if (cached != null) {
+            invalidateCacheLocation(cached);
+            signs.remove(getLocationKey(cached));
+        }
+
+        signs.put(getLocationKey(signDetail), signDetail);
+        invalidateCacheLocation(signDetail);
+        return signDetail;
+    }
+
+    public void existingSignDestroyed(Sign sign) {
+        SignDetail signDetail = getCachedSignDetail(sign.getLocation());
+        if (signDetail != null) {
+            signs.remove(getLocationKey(signDetail));
+            if (signDetail.isLiftSign())
+                invalidateCacheLocation(signDetail);
+        }
+    }
+
+    private void invalidateCacheLocation(SignDetail signDetail) {
+        for (SignDetail val : signs.values()) {
+            val.clearCache(signDetail);
+        }
+    }
+
+    private String getLocationKey(final Location l) {
+        return l.getWorld().getName() + "," + l.getBlockX() + "," + l.getBlockY() + "," + l.getBlockZ();
+    }
+
+    private String getLocationKey(final SignDetail signDetail) {
+        return getLocationKey(signDetail.getLocation());
+    }
 }

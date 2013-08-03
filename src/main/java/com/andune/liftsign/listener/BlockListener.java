@@ -26,70 +26,64 @@
  * GNU General Public License for more details.
  */
 /**
- * 
+ *
  */
 package com.andune.liftsign.listener;
 
-import javax.inject.Inject;
-
+import com.andune.liftsign.*;
+import com.andune.minecraft.commonlib.Logger;
 import org.bukkit.block.Sign;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.SignChangeEvent;
-import com.andune.liftsign.PermissionCheck;
-import com.andune.liftsign.SignCache;
-import com.andune.liftsign.SignDetail;
-import com.andune.liftsign.SignFactory;
-import com.andune.liftsign.Util;
 
-import com.andune.minecraft.commonlib.Logger;
+import javax.inject.Inject;
 
 /**
  * @author andune
- *
  */
 public class BlockListener implements Listener {
-	private final SignCache cache;
-	private final PermissionCheck perm;
-	private final SignFactory factory;
-	private final Logger log;
-	private final Util util;
-	
-	@Inject
-	public BlockListener(SignCache cache, PermissionCheck perm, SignFactory factory, Logger log, Util util) {
-		this.cache = cache;
-		this.perm = perm;
-		this.factory = factory;
-		this.log = log;
-		this.util = util;
-	}
+    private final SignCache cache;
+    private final PermissionCheck perm;
+    private final SignFactory factory;
+    private final Logger log;
+    private final Util util;
 
-	@EventHandler(ignoreCancelled=true)
-	public void onSignChange(SignChangeEvent e) {
-		Sign sign = util.getSignState(e.getBlock());
-		if( sign != null ) {
-			log.debug("Sign change detected");
-			String[] lines = e.getLines();
-			
-			SignDetail signDetail = factory.create(sign, lines);
-			if( signDetail.isLiftSign() ) {
-				log.debug("Sign is lift sign");
-				if( !perm.canCreateNormalLift(e.getPlayer()) ) {
-					util.getMessageUtil().sendLocalizedMessage(e.getPlayer(), Util.MSG_NO_PERM_CREATE_LIFT_SIGN);
-					e.setCancelled(true);
-				}
-			}
-			
-			if( !e.isCancelled() )
-				cache.newSignCreated(signDetail);
-		}
-	}
+    @Inject
+    public BlockListener(SignCache cache, PermissionCheck perm, SignFactory factory, Logger log, Util util) {
+        this.cache = cache;
+        this.perm = perm;
+        this.factory = factory;
+        this.log = log;
+        this.util = util;
+    }
 
-	@EventHandler(ignoreCancelled=true)
-	public void onBlockBreak(BlockBreakEvent e) {
-		Sign sign = util.getSignState(e.getBlock());
-		if( sign instanceof Sign )
-			cache.existingSignDestroyed(sign);
-	}
+    @EventHandler(ignoreCancelled = true)
+    public void onSignChange(SignChangeEvent e) {
+        Sign sign = util.getSignState(e.getBlock());
+        if (sign != null) {
+            log.debug("Sign change detected");
+            String[] lines = e.getLines();
+
+            SignDetail signDetail = factory.create(sign, lines);
+            if (signDetail.isLiftSign()) {
+                log.debug("Sign is lift sign");
+                if (!perm.canCreateNormalLift(e.getPlayer())) {
+                    util.getMessageUtil().sendLocalizedMessage(e.getPlayer(), Util.MSG_NO_PERM_CREATE_LIFT_SIGN);
+                    e.setCancelled(true);
+                }
+            }
+
+            if (!e.isCancelled())
+                cache.newSignCreated(signDetail);
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onBlockBreak(BlockBreakEvent e) {
+        Sign sign = util.getSignState(e.getBlock());
+        if (sign != null)
+            cache.existingSignDestroyed(sign);
+    }
 }

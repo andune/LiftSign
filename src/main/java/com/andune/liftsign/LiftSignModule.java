@@ -26,13 +26,9 @@
  * GNU General Public License for more details.
  */
 /**
- * 
+ *
  */
 package com.andune.liftsign;
-
-import java.io.IOException;
-
-import org.bukkit.plugin.Plugin;
 
 import com.andune.minecraft.commonlib.BukkitLoggerImpl;
 import com.andune.minecraft.commonlib.Logger;
@@ -45,69 +41,61 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Scopes;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
+import org.bukkit.plugin.Plugin;
 import org.reflections.Reflections;
 
 import javax.inject.Singleton;
+import java.io.IOException;
 
-/** This module tells Guice how to wire together all dependencies
+/**
+ * This module tells Guice how to wire together all dependencies
  * for the plugin.
- * 
- * @author andune
  *
+ * @author andune
  */
 public class LiftSignModule extends AbstractModule {
-	private final Plugin plugin;
-	private final LocaleConfig localeConfig;
-	private Locale locale;
+    private final Plugin plugin;
+    private final LocaleConfig localeConfig;
+    private Locale locale;
     private Reflections reflections;
 
-	public LiftSignModule(Plugin plugin, LocaleConfig localeConfig) {
-		this.plugin = plugin;
-		this.localeConfig = localeConfig;
-	}
-	
-	@Override
-	protected void configure() {
-		bind(Logger.class)
-			.toInstance(new BukkitLoggerImpl(plugin));
-//		bind(java.util.logging.Logger.class)
-//			.toInstance(plugin.getLogger());
-		bind(SignCache.class)
-			.in(Scopes.SINGLETON);
-		bind(Teleport.class)
-			.in(Scopes.SINGLETON);
-		bind(Colors.class)
-			.in(Scopes.SINGLETON);
-		
-		
-		install(new FactoryModuleBuilder()
-			.implement(SignDetail.class, SignDetail.class)
-			.build(SignFactory.class)
-		);
-	}
-	
-//	@Provides
-//	@Singleton
-//	protected PermissionSystem providePermissionSystem() {
-//		if( permSystem == null )
-//			permSystem = new PermissionSystem(plugin, plugin.getLogger());
-//		return permSystem;
-//	}
-	
-	@Provides
-	protected Plugin providePlugin() {
-		return plugin;
-	}
-	
-	@Provides
-	protected Locale provideLocale() throws IOException {
-        if( locale == null ) {
-			locale = LocaleFactory.getLocale();
-			locale.load(localeConfig);
+    public LiftSignModule(Plugin plugin, LocaleConfig localeConfig) {
+        this.plugin = plugin;
+        this.localeConfig = localeConfig;
+    }
+
+    @Override
+    protected void configure() {
+        bind(Logger.class)
+                .toInstance(new BukkitLoggerImpl(plugin));
+        bind(SignCache.class)
+                .in(Scopes.SINGLETON);
+        bind(Teleport.class)
+                .in(Scopes.SINGLETON);
+        bind(Colors.class)
+                .in(Scopes.SINGLETON);
+
+
+        install(new FactoryModuleBuilder()
+                .implement(SignDetail.class, SignDetail.class)
+                .build(SignFactory.class)
+        );
+    }
+
+    @Provides
+    protected Plugin providePlugin() {
+        return plugin;
+    }
+
+    @Provides
+    protected Locale provideLocale() throws IOException {
+        if (locale == null) {
+            locale = LocaleFactory.getLocale();
+            locale.load(localeConfig);
         }
-		
-		return locale;
-	}
+
+        return locale;
+    }
 
     @Provides
     @Singleton

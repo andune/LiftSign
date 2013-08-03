@@ -26,36 +26,36 @@
  * GNU General Public License for more details.
  */
 /**
- * 
+ *
  */
 package com.andune.liftsign;
 
-import javax.inject.Inject;
-
 import org.bukkit.command.CommandSender;
 
-/** Centralized permission checks.
- * 
- * @author andune
+import javax.inject.Inject;
+
+/**
+ * Centralized permission checks.
  *
+ * @author andune
  */
 public class PermissionCheck {
-	private static final String BASE = "liftsign";
-	private static final String CREATE_NORMAL = BASE + ".normal.create";
-	private static final String USE_NORMAL = BASE + ".normal.use";
-	
-	private Permissions permissions;
-	
-	@Inject
-	public PermissionCheck(Permissions permissionSystem) {
-		this.permissions = permissionSystem;
-	}
-	
-	public boolean canUseNormalLift(CommandSender sender) {
-		return permissions.has(sender, USE_NORMAL);
-	}
-	
-	public boolean canCreateNormalLift(CommandSender sender) {
-		return permissions.has(sender, CREATE_NORMAL);
-	}
+    private static final String BASE = "liftsign";
+    private static final String CREATE_NORMAL = BASE + ".normal.create";
+    private static final String USE_NORMAL = BASE + ".normal.use";
+
+    private Permissions permissions;
+
+    @Inject
+    public PermissionCheck(Permissions permissionSystem) {
+        this.permissions = permissionSystem;
+    }
+
+    public boolean canUseNormalLift(CommandSender sender) {
+        return permissions.has(sender, USE_NORMAL);
+    }
+
+    public boolean canCreateNormalLift(CommandSender sender) {
+        return permissions.has(sender, CREATE_NORMAL);
+    }
 }
