@@ -19,3 +19,9 @@ The result is the integration of the Google IoC container (Guice) which is a lig
 What it does bring to the table is much cleaner code that is easier to maintain and for which unit tests can be written with ease since dependencies are not hard-wired into the code.
 
 The only real downside is that the downloadable JAR is "fatter" by virtue of including Guice in the plugin, but in the days of high-speed networks if someone is complaining about an extra 700k download, they really need to get a better network. Guice of course has some small memory overhead, probably on the order of 100-200k at runtime, but that's far less than even a single player takes up with the chunks loaded around them on a Minecraft server; so again, a negligible overhead for all the benefits that IoC brings.
+
+Sonar
+-----
+Sonar was used in the development of this plugin, which applies static code analysis to look for obvious bugs and make sure the code is wellformatted. However, there are a few tweaks to the default rules that appeal to my personal coding style, such as not requiring braces {} for all if/else conditionals.
+
+If you wish to contribute and want to use Sonar to validate code you write, you can install Sonar (http://www.sonarqube.org/), install my quality profile (http://goo.gl/COZFCo) using 'Restore Profile' and then run "mvn sonar:sonar" on the project to get your own Sonar report. Note sonar allows you to assign per-project rulesets, so if you don't like my settings for your other projects, you can assign my ruleset just for this project.
