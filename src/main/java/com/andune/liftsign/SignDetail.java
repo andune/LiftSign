@@ -103,14 +103,17 @@ public class SignDetail {
                 log.debug("Sign is lift up");
                 isLiftUp = true;
                 isLiftSign = true;
-            } else if (lines[1].equalsIgnoreCase("[lift down]")) {
+            }
+            else if (lines[1].equalsIgnoreCase("[lift down]")) {
                 log.debug("Sign is lift up");
                 isLiftDown = true;
                 isLiftSign = true;
-            } else if (lines[1].equalsIgnoreCase("[lift]")) {
+            }
+            else if (lines[1].equalsIgnoreCase("[lift]")) {
                 log.debug("Sign is lift target");
                 isLiftSign = true;
-            } else {
+            }
+            else {
                 log.debug("Sign is not a lift sign");
             }
         }
@@ -157,7 +160,8 @@ public class SignDetail {
         // a possible target
         if (isLiftUp && signLocation.getBlockY() > y) {
             return true;
-        } else if (isLiftDown && signLocation.getBlockY() < y) {
+        }
+        else if (isLiftDown && signLocation.getBlockY() < y) {
             return true;
         }
 

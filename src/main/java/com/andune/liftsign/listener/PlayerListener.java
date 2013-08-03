@@ -129,10 +129,12 @@ public class PlayerListener implements Listener {
 
                     // cancel event so as not to place blocks accidentally
                     event.setCancelled(true);
-                } else {
+                }
+                else {
                     util.getMessageUtil().sendLocalizedMessage(p, Util.MSG_DESTINATION_NOT_SAFE);
                 }
-            } else {
+            }
+            else {
                 log.debug("no target");
                 util.getMessageUtil().sendLocalizedMessage(p, Util.MSG_NO_VALID_LIFT_TARGET);
             }
