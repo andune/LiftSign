@@ -79,7 +79,7 @@ public class SignDetail {
      */
     @Inject
     public SignDetail(final SignCache cache, final Logger log, final Util util,
-                      final @Assisted Sign sign, final @Assisted @Nullable String[] inputLines) {
+                      @Assisted final Sign sign, @Assisted @Nullable final String[] inputLines) {
         this.cache = cache;
         this.log = log;
         this.util = util;
