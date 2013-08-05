@@ -43,7 +43,6 @@ import com.andune.minecraft.commonlib.Logger;
  *
  */
 public class TestSignFactory {
-	private Logger log;
 	private Util util;
 	// SignCache is not part of constructor because there is a chicken/egg
 	// problem between SignCache and a Factory. We let the factory be
@@ -51,15 +50,14 @@ public class TestSignFactory {
 	// cache has been initialized with this factory.
 	private SignCache cache;
 	
-	public TestSignFactory(Logger log, Util util) {
-		this.log = log;
+	public TestSignFactory(Util util) {
 		this.util = util;
 	}
 	
 	public SignFactory newSignFactory() {
 		return new SignFactory() {
 			public SignDetail create(Sign sign, String[] lines) {
-				return new SignDetail(cache, log, util, sign, lines);
+				return new SignDetail(cache, util, sign, lines);
 			}
 		};
 	}

@@ -69,7 +69,6 @@ import com.andune.minecraft.commonlib.Logger;
 @PrepareForTest({ SignChangeEvent.class })
 public class TestBlockListener {
 	private TestUtility testUtility;
-	private Logger log;
 	private MessageUtil msgUtil;
 	private Util util;
 	
@@ -78,9 +77,6 @@ public class TestBlockListener {
 		testUtility = new TestUtility();
 		msgUtil = PowerMockito.mock(MessageUtil.class);
 		util = new Util(msgUtil);
-		
-		log = PowerMockito.mock(Logger.class);
-//		log = testUtility.systemOutLogger();
 	}
 	
 	@Test
@@ -96,7 +92,7 @@ public class TestBlockListener {
 		
 		BlockListener blockListener = new BlockListener(cache,
 				PowerMockito.mock(PermissionCheck.class),
-				PowerMockito.mock(SignFactory.class), log, util);
+				PowerMockito.mock(SignFactory.class), util);
 		blockListener.onBlockBreak(event);
 		
 		verify(cache).existingSignDestroyed(any(Sign.class));
@@ -174,7 +170,7 @@ public class TestBlockListener {
 			}
 			});
 		
-		BlockListener blockListener = new BlockListener(cache, perm, factory, log, util);
+		BlockListener blockListener = new BlockListener(cache, perm, factory, util);
 		
 		return new SignChangeObjects(blockListener, event, factory, cache, mockWorld);
 	}

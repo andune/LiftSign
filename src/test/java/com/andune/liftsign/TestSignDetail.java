@@ -53,7 +53,6 @@ import com.andune.minecraft.commonlib.Logger;
  */
 public class TestSignDetail {
 	private TestUtility testUtility;
-	private Logger log;
 	private Util util;
 	private TestSignFactory testSignFactory;
 	private World mockWorld;
@@ -64,10 +63,8 @@ public class TestSignDetail {
 	@Before
 	public void setup() {
 		testUtility = new TestUtility();
-		log =  PowerMockito.mock(Logger.class);
-//		log = testUtility.systemOutLogger();
 		this.util = new Util(PowerMockito.mock(MessageUtil.class));
-		testSignFactory = new TestSignFactory(log, util);
+		testSignFactory = new TestSignFactory(util);
 		
 		mockWorld = testUtility.createPopulatedMockWorld(3,10,3);
 		signUp = testUtility.newSign(mockWorld, 1,2,1, new String[] {"","[Lift up]","",""}, false);
@@ -84,11 +81,11 @@ public class TestSignDetail {
 		final SignCache cache = new SignCache(factory);
 		testSignFactory.setCache(cache);
 		
-		SignDetail signDetailSignUp = new SignDetail(cache, log, util, signUp, null);
+		SignDetail signDetailSignUp = new SignDetail(cache, util, signUp, null);
 		assertTrue(signDetailSignUp.isLiftSign());
-		SignDetail signDetailSignDown = new SignDetail(cache, log, util, signDown, null);
+		SignDetail signDetailSignDown = new SignDetail(cache, util, signDown, null);
 		assertTrue(signDetailSignDown.isLiftSign());
-		SignDetail signDetailUpNormalSign = new SignDetail(cache, log, util, normalSign, null);
+		SignDetail signDetailUpNormalSign = new SignDetail(cache, util, normalSign, null);
 		assertFalse(signDetailUpNormalSign.isLiftSign());
 		Sign sign4 = testUtility.newSign(mockWorld, 1,2,1, new String[] {"","[Lift]","",""}, false);
 		SignDetail signDetail4 = cache.newSignCreated(sign4);
@@ -100,9 +97,9 @@ public class TestSignDetail {
 		final SignFactory factory = testSignFactory.newSignFactory();
 		final SignCache cache = new SignCache(factory);
 		testSignFactory.setCache(cache);
-		SignDetail signDetailSignUp = new SignDetail(cache, log, util, signUp, null);
-		SignDetail signDetailSignDown = new SignDetail(cache, log, util, signDown, null);
-		SignDetail signDetailNormalSign = new SignDetail(cache, log, util, normalSign, null);
+		SignDetail signDetailSignUp = new SignDetail(cache, util, signUp, null);
+		SignDetail signDetailSignDown = new SignDetail(cache, util, signDown, null);
+		SignDetail signDetailNormalSign = new SignDetail(cache, util, normalSign, null);
 		
 		assertTrue(signDetailSignUp.isPossibleTargetMatch(signDetailSignDown));
 		assertFalse(signDetailSignDown.isPossibleTargetMatch(signDetailNormalSign));

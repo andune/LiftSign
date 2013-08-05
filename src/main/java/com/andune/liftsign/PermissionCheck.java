@@ -30,6 +30,7 @@
  */
 package com.andune.liftsign;
 
+import com.andune.minecraft.commonlib.PermissionSystemImpl;
 import org.bukkit.command.CommandSender;
 
 import javax.inject.Inject;
@@ -44,10 +45,10 @@ public class PermissionCheck {
     private static final String CREATE_NORMAL = BASE + ".normal.create";
     private static final String USE_NORMAL = BASE + ".normal.use";
 
-    private Permissions permissions;
+    private PermissionSystemImpl permissions;
 
     @Inject
-    public PermissionCheck(Permissions permissionSystem) {
+    public PermissionCheck(PermissionSystemImpl permissionSystem) {
         this.permissions = permissionSystem;
     }
 

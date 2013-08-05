@@ -32,6 +32,7 @@ package com.andune.liftsign.listener;
 
 import com.andune.liftsign.*;
 import com.andune.minecraft.commonlib.Logger;
+import com.andune.minecraft.commonlib.LoggerFactory;
 import org.bukkit.block.Sign;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -44,18 +45,18 @@ import javax.inject.Inject;
  * @author andune
  */
 public class BlockListener implements Listener {
+    private static final Logger log = LoggerFactory.getLogger(BlockListener.class);
+
     private final SignCache cache;
     private final PermissionCheck perm;
     private final SignFactory factory;
-    private final Logger log;
     private final Util util;
 
     @Inject
-    public BlockListener(SignCache cache, PermissionCheck perm, SignFactory factory, Logger log, Util util) {
+    public BlockListener(SignCache cache, PermissionCheck perm, SignFactory factory, Util util) {
         this.cache = cache;
         this.perm = perm;
         this.factory = factory;
-        this.log = log;
         this.util = util;
     }
 

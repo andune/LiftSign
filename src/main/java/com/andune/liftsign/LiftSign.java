@@ -32,9 +32,10 @@ package com.andune.liftsign;
 
 import com.andune.liftsign.listener.BlockListener;
 import com.andune.liftsign.listener.PlayerListener;
-import com.andune.minecraft.commonlib.Debug;
 import com.andune.minecraft.commonlib.JarUtils;
 import com.andune.minecraft.commonlib.Logger;
+import com.andune.minecraft.commonlib.LoggerFactory;
+import com.andune.minecraft.commonlib.PermissionSystemImpl;
 import com.andune.minecraft.commonlib.i18n.LocaleConfig;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -49,15 +50,17 @@ import java.io.IOException;
  */
 public class LiftSign extends JavaPlugin {
     private Logger log;
-    private Debug debug;
     private PlayerListener playerListener;
     private BlockListener blockListener;
-    private Permissions permSystem;
+    private PermissionSystemImpl permSystem;
 
     private String buildNumber = "unknown";
 
     @Override
     public void onEnable() {
+        LoggerFactory.setLoggerPrefix("[LiftSign] ");
+        log = LoggerFactory.getLogger(LiftSign.class);
+
         JarUtils jarUtil = new JarUtils(getDataFolder(), getFile());
         // copy default config.yml into place if needed
         try {
@@ -66,6 +69,9 @@ public class LiftSign extends JavaPlugin {
             log.warn("Error copying default config file into place: " + e.getMessage());
         }
         buildNumber = jarUtil.getBuild();
+
+        if( getConfig().getBoolean("debug", false) )
+            LoggerFactory.getLogUtil().enableDebug("com.andune.liftsign");
 
         // load localized strings for the configured locale
         LocaleConfig localeConfig = new LocaleConfig(getConfig().getString("locale", "en"),
@@ -76,10 +82,7 @@ public class LiftSign extends JavaPlugin {
         Injector injector = Guice.createInjector(new LiftSignModule(this, localeConfig));
         injector.injectMembers(this);
 
-        debug.setLogFileName("plugins/LiftSign/debug.log");
-        debug.setDebug(getConfig().getBoolean("debug", false));
-
-        permSystem.init();
+        permSystem.setupPermissions(true, getConfig().getStringList("permissions"));
 
         getServer().getPluginManager().registerEvents(playerListener, this);
         getServer().getPluginManager().registerEvents(blockListener, this);
@@ -93,16 +96,6 @@ public class LiftSign extends JavaPlugin {
     }
 
     @Inject
-    public void setLogger(Logger logger) {
-        this.log = logger;
-    }
-
-    @Inject
-    public void setDebug(Debug debug) {
-        this.debug = debug;
-    }
-
-    @Inject
     public void setPlayerListener(PlayerListener playerListener) {
         this.playerListener = playerListener;
     }
@@ -113,7 +106,7 @@ public class LiftSign extends JavaPlugin {
     }
 
     @Inject
-    public void setPermissionSystem(Permissions permSystem) {
+    public void setPermissionSystem(PermissionSystemImpl permSystem) {
         this.permSystem = permSystem;
     }
 }

@@ -11,7 +11,4 @@ locale: en
 permissions:
   - vault
   - wepif
-  - pex
-  - perm2-compat
   - superperms
-  - ops

@@ -73,7 +73,6 @@ import com.andune.minecraft.commonlib.Teleport;
 @PrepareForTest({ SignChangeEvent.class, PlayerInteractEvent.class })
 public class TestPlayerListener {
 	private TestUtility testUtility;
-	private Logger log;
 	private Util util;
 	private MessageUtil msgUtil;
 	private TestSignFactory testSignFactory;
@@ -86,10 +85,9 @@ public class TestPlayerListener {
 	@Before
 	public void setup() {
 		testUtility = new TestUtility();
-		log = PowerMockito.mock(Logger.class);
 		msgUtil = PowerMockito.mock(MessageUtil.class);
 		util = new Util(msgUtil);
-		testSignFactory = new TestSignFactory(log, util);
+		testSignFactory = new TestSignFactory(util);
 		
 		mockWorld = testUtility.createPopulatedMockWorld(4,7,4);
 		signUp1 = testUtility.newSign(mockWorld, 1,1,1, new String[] {"","[Lift up]","",""}, false);
@@ -246,7 +244,7 @@ public class TestPlayerListener {
 		
 		public InstanceTestObjects() {
 			 testSignFactory.setCache(cache);
-			 listener = new PlayerListener(cache, factory, perm, teleport, log, util);
+			 listener = new PlayerListener(cache, factory, perm, teleport, util);
 			 when(event.getPlayer()).thenReturn(player);
 		}
 		

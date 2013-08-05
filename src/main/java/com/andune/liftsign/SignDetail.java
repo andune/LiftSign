@@ -31,6 +31,7 @@
 package com.andune.liftsign;
 
 import com.andune.minecraft.commonlib.Logger;
+import com.andune.minecraft.commonlib.LoggerFactory;
 import com.google.inject.assistedinject.Assisted;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -48,8 +49,9 @@ import javax.inject.Inject;
  * @author andune
  */
 public class SignDetail {
+    private static final Logger log = LoggerFactory.getLogger(SignDetail.class);
+
     private final SignCache cache;
-    private final Logger log;
     private final Util util;
 
     private final Location location;
@@ -69,19 +71,17 @@ public class SignDetail {
      * Create a new SignDetail object.
      *
      * @param cache
-     * @param log
      * @param util
-     * @param sign  the Sign backing this SignDetail object
-     * @param lines intended to be used when called from SignChangeEvent, so
-     *              the new lines can be passed in even though they aren't part of the block
-     *              state yet. Leave null if you want this method to just use the lines from
-     *              the Sign state object.
+     * @param sign       the Sign backing this SignDetail object
+     * @param inputLines intended to be used when called from SignChangeEvent, so
+     *                   the new lines can be passed in even though they aren't part of the block
+     *                   state yet. Leave null if you want this method to just use the lines from
+     *                   the Sign state object.
      */
     @Inject
-    public SignDetail(final SignCache cache, final Logger log, final Util util,
-                      @Assisted final Sign sign, @Assisted @Nullable final String[] inputLines) {
+    public SignDetail(final SignCache cache, final Util util, @Assisted final Sign sign,
+                      @Assisted @Nullable final String[] inputLines) {
         this.cache = cache;
-        this.log = log;
         this.util = util;
 
         this.location = sign.getLocation();
@@ -96,9 +96,9 @@ public class SignDetail {
             lines = sign.getLines();
 
         isLiftSign = false;
-        log.debug("new SignDetail object. lines={}", lines);
+        log.debug("new SignDetail object. lines={}", (Object) lines);
         if (lines != null && lines.length > 1) {
-            log.debug("lines[1]=", lines[1]);
+            log.debug("lines[1]={}", lines[1]);
             if (lines[1].equalsIgnoreCase("[lift up]")) {
                 log.debug("Sign is lift up");
                 isLiftUp = true;
@@ -193,7 +193,7 @@ public class SignDetail {
                 face = BlockFace.DOWN;
                 max = 1;
             }
-            log.debug("getTargetLift(): isLiftUp=", isLiftUp, ", face=", face, ", max=", max);
+            log.debug("getTargetLift(): isLiftUp={}, face={}, max={}", isLiftUp, face, max);
 
             Block next = b;
             // loop up or down looking for the first possible target sign.

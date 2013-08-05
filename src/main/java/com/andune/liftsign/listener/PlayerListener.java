@@ -32,6 +32,7 @@ package com.andune.liftsign.listener;
 
 import com.andune.liftsign.*;
 import com.andune.minecraft.commonlib.Logger;
+import com.andune.minecraft.commonlib.LoggerFactory;
 import com.andune.minecraft.commonlib.Teleport;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -49,21 +50,21 @@ import javax.inject.Inject;
  * @author andune
  */
 public class PlayerListener implements Listener {
+    private static final Logger log = LoggerFactory.getLogger(PlayerListener.class);
+
     private final SignCache cache;
     private final PermissionCheck perm;
     private final Teleport teleport;
-    private final Logger log;
     private final Util util;
     private final SignFactory factory;
 
     @Inject
     public PlayerListener(SignCache cache, SignFactory factory, PermissionCheck perm,
-                          Teleport teleport, Logger log, Util util) {
+                          Teleport teleport, Util util) {
         this.cache = cache;
         this.factory = factory;
         this.perm = perm;
         this.teleport = teleport;
-        this.log = log;
         this.util = util;
     }
 

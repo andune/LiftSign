@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.andune.liftsign</groupId>
     <artifactId>LiftSign</artifactId>
-    <version>0.4</version>
+    <version>0.4.1</version>
     <name>LiftSign</name>
     <description>CraftBukkit/SignLift compatible open source Lift Signs for Bukkit</description>
     <url>https://dev.bukkit.org/server-mods/LiftSign/</url>
@@ -82,12 +82,12 @@
         <dependency>
             <groupId>com.andune.minecraft.commonlib</groupId>
             <artifactId>commonlib</artifactId>
-            <version>0.5-SNAPSHOT</version>
+            <version>0.5</version>
         </dependency>
         <dependency>
             <groupId>com.andune.minecraft.commonlib</groupId>
             <artifactId>commonBukkitlib</artifactId>
-            <version>0.5-SNAPSHOT</version>
+            <version>0.5</version>
         </dependency>
 
         <!-- Start of Test Dependencies -->

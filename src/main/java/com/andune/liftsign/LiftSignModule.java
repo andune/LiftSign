@@ -30,13 +30,16 @@
  */
 package com.andune.liftsign;
 
-import com.andune.minecraft.commonlib.BukkitLoggerImpl;
 import com.andune.minecraft.commonlib.Logger;
+import com.andune.minecraft.commonlib.LoggerFactory;
+import com.andune.minecraft.commonlib.PermissionSystemImpl;
 import com.andune.minecraft.commonlib.Teleport;
 import com.andune.minecraft.commonlib.i18n.Colors;
 import com.andune.minecraft.commonlib.i18n.Locale;
 import com.andune.minecraft.commonlib.i18n.LocaleConfig;
 import com.andune.minecraft.commonlib.i18n.LocaleFactory;
+import com.andune.minecraft.commonlib.server.api.PermissionSystem;
+import com.andune.minecraft.commonlib.server.bukkit.BukkitPermissionSystem;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Scopes;
@@ -67,14 +70,16 @@ public class LiftSignModule extends AbstractModule {
     @Override
     protected void configure() {
         bind(Logger.class)
-                .toInstance(new BukkitLoggerImpl(plugin));
+                .toInstance(LoggerFactory.getLogger("com.andune.liftsign.LiftSign"));
+
         bind(SignCache.class)
                 .in(Scopes.SINGLETON);
         bind(Teleport.class)
                 .in(Scopes.SINGLETON);
         bind(Colors.class)
                 .in(Scopes.SINGLETON);
-
+        bind(PermissionSystem.class)
+                .to(BukkitPermissionSystem.class);
 
         install(new FactoryModuleBuilder()
                 .implement(SignDetail.class, SignDetail.class)
@@ -104,5 +109,11 @@ public class LiftSignModule extends AbstractModule {
             this.reflections = new Reflections("com.andune.liftsign");
         }
         return reflections;
+    }
+
+    @Provides
+    @Singleton
+    protected PermissionSystemImpl providePermissionsSystem(Plugin plugin, Reflections reflections) {
+        return new PermissionSystemImpl(plugin, reflections);
     }
 }

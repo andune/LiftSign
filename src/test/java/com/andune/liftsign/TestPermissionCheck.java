@@ -36,6 +36,7 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 
+import com.andune.minecraft.commonlib.PermissionSystemImpl;
 import org.bukkit.command.CommandSender;
 import org.junit.Before;
 import org.junit.Test;
@@ -46,16 +47,16 @@ import org.powermock.api.mockito.PowerMockito;
  *
  */
 public class TestPermissionCheck {
-	private Permissions permSystemAllTrue;
-	private Permissions permSystemAllFalse;
+	private PermissionSystemImpl permSystemAllTrue;
+	private PermissionSystemImpl permSystemAllFalse;
 	private CommandSender mockSender;
 	
 	@Before
 	public void setup() {
 		mockSender = PowerMockito.mock(CommandSender.class);
-		permSystemAllTrue = PowerMockito.mock(Permissions.class);
+		permSystemAllTrue = PowerMockito.mock(PermissionSystemImpl.class);
 		when(permSystemAllTrue.has(eq(mockSender), anyString())).thenReturn(true);
-		permSystemAllFalse = PowerMockito.mock(Permissions.class);
+		permSystemAllFalse = PowerMockito.mock(PermissionSystemImpl.class);
 		when(permSystemAllTrue.has(eq(mockSender), anyString())).thenReturn(true);
 	}
 	
