@@ -1,3 +1,6 @@
+v0.4.1 - Aug 5, 2013
+* fix issue with debug statements being printed to server.log
+
 v0.4 - Aug 4, 2013
 * update for Bukkit v1.6.2 to allow safe teleport algorithm to work properly with carpets
 * library transition from old common lib to new anduneCommonLib
