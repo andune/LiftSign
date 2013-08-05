@@ -1,3 +1,9 @@
+v0.4 - Aug 4, 2013
+* update for Bukkit v1.6.2 to allow safe teleport algorithm to work properly with carpets
+* library transition from old common lib to new anduneCommonLib
+* some code cleanup as a result of Sonar static analysis, some unreported bugs fixed. 100% RCI, Sonar dashboard: http://goo.gl/tgByfg
+* updates to maven pom to fix build process for anyone wanting to build the project from source
+
 v0.3 - Jan 3, 2013
 * fix for 'no valid target sign' on non-lift related signs
 * fix for reported issue with Vault/PEX
